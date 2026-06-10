@@ -87,8 +87,8 @@ function AgentsPage() {
                 </Select>
               </R>
             </div>
-            <R label="Input"><Textarea rows={2} value={draft.input_description || ""} onChange={(e) => setDraft({ ...draft, input: e.target.value })} /></R>
-            <R label="Output"><Textarea rows={2} value={draft.output_description || ""} onChange={(e) => setDraft({ ...draft, output: e.target.value })} /></R>
+            <R label="Input"><Textarea rows={2} value={draft.input_description || ""} onChange={(e) => setDraft({ ...draft, input_description: e.target.value })} /></R>
+            <R label="Output"><Textarea rows={2} value={draft.output_description || ""} onChange={(e) => setDraft({ ...draft, output_description: e.target.value })} /></R>
             <R label="Tools (csv)"><Input value={arrayToCsv(draft.tools_used)} onChange={(e) => setDraft({ ...draft, tools_used: csvToArray(e.target.value) })} /></R>
             <R label="n8n workflow URL"><Input value={draft.n8n_workflow_url || ""} onChange={(e) => setDraft({ ...draft, n8n_workflow_url: e.target.value })} /></R>
             <R label="Notes"><Textarea rows={2} value={draft.notes || ""} onChange={(e) => setDraft({ ...draft, notes: e.target.value })} /></R>

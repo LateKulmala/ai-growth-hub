@@ -71,8 +71,8 @@ function AgentDetail() {
           <F label="n8n URL"><Input value={v.n8n_workflow_url || ""} onChange={(e) => setF({ ...v, n8n_workflow_url: e.target.value })} /></F>
         </div>
         <F label="Description"><Textarea rows={3} value={v.description || ""} onChange={(e) => setF({ ...v, description: e.target.value })} /></F>
-        <F label="Input"><Textarea rows={2} value={v.input_description || ""} onChange={(e) => setF({ ...v, input: e.target.value })} /></F>
-        <F label="Output"><Textarea rows={2} value={v.output_description || ""} onChange={(e) => setF({ ...v, output: e.target.value })} /></F>
+        <F label="Input"><Textarea rows={2} value={v.input_description || ""} onChange={(e) => setF({ ...v, input_description: e.target.value })} /></F>
+        <F label="Output"><Textarea rows={2} value={v.output_description || ""} onChange={(e) => setF({ ...v, output_description: e.target.value })} /></F>
         <F label="Tools (csv)"><Input value={arrayToCsv(v.tools_used)} onChange={(e) => setF({ ...v, tools_used: csvToArray(e.target.value) })} /></F>
         <div className="flex flex-wrap gap-1.5">{(v.tools_used || []).map((t: string) => <Chip key={t}>{t}</Chip>)}</div>
         <F label="Notes"><Textarea rows={3} value={v.notes || ""} onChange={(e) => setF({ ...v, notes: e.target.value })} /></F>
