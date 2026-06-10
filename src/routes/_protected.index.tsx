@@ -193,7 +193,7 @@ function RecentList({
           return (
             <li key={r.id} className="rounded-lg border border-border/50 bg-surface/30 px-3 py-2 hover:border-primary/30">
               {r.to ? (
-                <Link to={r.to}>{content}</Link>
+                <Link to={r.to as never}>{content}</Link>
               ) : r.href ? (
                 <a href={r.href} target="_blank" rel="noreferrer">{content}</a>
               ) : (
