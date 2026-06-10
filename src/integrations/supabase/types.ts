@@ -194,6 +194,54 @@ export type Database = {
           },
         ]
       }
+      automation_logs: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          error_message: string | null
+          finished_at: string | null
+          id: string
+          payload: Json | null
+          result: Json | null
+          source: string
+          started_at: string
+          status: string
+          trigger_type: string | null
+          updated_at: string
+          workflow_name: string
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          payload?: Json | null
+          result?: Json | null
+          source?: string
+          started_at?: string
+          status?: string
+          trigger_type?: string | null
+          updated_at?: string
+          workflow_name: string
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          payload?: Json | null
+          result?: Json | null
+          source?: string
+          started_at?: string
+          status?: string
+          trigger_type?: string | null
+          updated_at?: string
+          workflow_name?: string
+        }
+        Relationships: []
+      }
       daily_briefings: {
         Row: {
           briefing_date: string
@@ -438,14 +486,20 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           created_at: string
+          daily_briefing_time: string | null
+          daily_experiment_enabled: boolean
+          daily_telegram_enabled: boolean
           development_goals: string[] | null
           display_name: string
           focus_areas: string[] | null
           id: string
           learning_score: number
+          n8n_webhook_url: string | null
           public_summary: string | null
           skills: string[] | null
           strengths: string[] | null
+          telegram_bot_status: string | null
+          telegram_chat_id: string | null
           tools: string[] | null
           updated_at: string
           weekly_streak: number
@@ -454,14 +508,20 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          daily_briefing_time?: string | null
+          daily_experiment_enabled?: boolean
+          daily_telegram_enabled?: boolean
           development_goals?: string[] | null
           display_name?: string
           focus_areas?: string[] | null
           id?: string
           learning_score?: number
+          n8n_webhook_url?: string | null
           public_summary?: string | null
           skills?: string[] | null
           strengths?: string[] | null
+          telegram_bot_status?: string | null
+          telegram_chat_id?: string | null
           tools?: string[] | null
           updated_at?: string
           weekly_streak?: number
@@ -470,14 +530,20 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          daily_briefing_time?: string | null
+          daily_experiment_enabled?: boolean
+          daily_telegram_enabled?: boolean
           development_goals?: string[] | null
           display_name?: string
           focus_areas?: string[] | null
           id?: string
           learning_score?: number
+          n8n_webhook_url?: string | null
           public_summary?: string | null
           skills?: string[] | null
           strengths?: string[] | null
+          telegram_bot_status?: string | null
+          telegram_chat_id?: string | null
           tools?: string[] | null
           updated_at?: string
           weekly_streak?: number
