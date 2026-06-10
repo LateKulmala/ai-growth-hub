@@ -20,6 +20,7 @@ export const Route = createFileRoute("/_protected/agents")({
 
 function AgentsPage() {
   const agents = useSuspenseQuery(listQuery<any>("agents")).data;
+  const projects = useSuspenseQuery(listQuery<any>("projects")).data;
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<any>({ status: "idle", trigger_type: "manual" });
   const upsert = useUpsert("agents");
@@ -47,6 +48,7 @@ function AgentsPage() {
                 <span>Liipaisin · {a.trigger_type}</span>
                 <span>· Onnistuminen {Math.round((a.success_rate || 0) * 100)}%</span>
               </div>
+              {a.project_id && (() => { const proj = projects.find((p: any) => p.id === a.project_id); return proj ? <div className="mt-1 text-xs text-muted-foreground">Projekti: {proj.name}</div> : null; })()}
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {(a.tools_used || []).slice(0, 4).map((t: string) => <Chip key={t}>{t}</Chip>)}
               </div>
@@ -87,6 +89,15 @@ function AgentsPage() {
                 </Select>
               </R>
             </div>
+            <R label="Projekti">
+              <Select value={draft.project_id ?? "none"} onValueChange={(x) => setDraft({ ...draft, project_id: x === "none" ? null : x })}>
+                <SelectTrigger><SelectValue placeholder="Ei projektia" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Ei projektia</SelectItem>
+                  {projects.map((p: any) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </R>
             <R label="Syöte"><Textarea rows={2} value={draft.input_description || ""} onChange={(e) => setDraft({ ...draft, input_description: e.target.value })} /></R>
             <R label="Tuotos"><Textarea rows={2} value={draft.output_description || ""} onChange={(e) => setDraft({ ...draft, output_description: e.target.value })} /></R>
             <R label="Työkalut (pilkulla)"><Input value={arrayToCsv(draft.tools_used)} onChange={(e) => setDraft({ ...draft, tools_used: csvToArray(e.target.value) })} /></R>

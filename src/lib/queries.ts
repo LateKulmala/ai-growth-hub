@@ -15,7 +15,9 @@ type TableName =
   | "skills"
   | "score_events"
   | "telegram_messages"
-  | "automation_logs";
+  | "automation_logs"
+  | "project_links"
+  | "project_files";
 
 export function listQuery<T = any>(
   table: TableName,

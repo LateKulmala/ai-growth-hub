@@ -22,12 +22,14 @@ export const Route = createFileRoute("/_protected/experiments")({
 
 function ExperimentsPage() {
   const items = useSuspenseQuery(listQuery<any>("experiments", { column: "experiment_date" })).data;
+  const projects = useSuspenseQuery(listQuery<any>("projects")).data;
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<any>(blankDraft());
   const upsert = useUpsert("experiments");
 
   const [status, setStatus] = useState<string>("all");
   const [category, setCategory] = useState<string>("all");
+  const [projectFilter, setProjectFilter] = useState<string>("all");
   const [difficulty, setDifficulty] = useState<[number, number]>([1, 10]);
   const [score, setScore] = useState<[number, number]>([0, 100]);
 
@@ -41,13 +43,14 @@ function ExperimentsPage() {
     return items.filter((e: any) => {
       if (status !== "all" && e.status !== status) return false;
       if (category !== "all" && e.category !== category) return false;
+      if (projectFilter !== "all" && e.project_id !== projectFilter) return false;
       const d = e.difficulty ?? 0;
       if (d < difficulty[0] || d > difficulty[1]) return false;
       const s = e.score_total ?? 0;
       if (s < score[0] || s > score[1]) return false;
       return true;
     });
-  }, [items, status, category, difficulty, score]);
+  }, [items, status, category, projectFilter, difficulty, score]);
 
   const stats = useMemo(() => {
     const total = items.length;
@@ -60,8 +63,8 @@ function ExperimentsPage() {
     return { total, completed, inProgress, avg };
   }, [items]);
 
-  const reset = () => { setStatus("all"); setCategory("all"); setDifficulty([1, 10]); setScore([0, 100]); };
-  const filtersActive = status !== "all" || category !== "all" || difficulty[0] !== 1 || difficulty[1] !== 10 || score[0] !== 0 || score[1] !== 100;
+  const reset = () => { setStatus("all"); setCategory("all"); setProjectFilter("all"); setDifficulty([1, 10]); setScore([0, 100]); };
+  const filtersActive = status !== "all" || category !== "all" || projectFilter !== "all" || difficulty[0] !== 1 || difficulty[1] !== 10 || score[0] !== 0 || score[1] !== 100;
 
   return (
     <div className="space-y-6">
@@ -104,6 +107,15 @@ function ExperimentsPage() {
               </SelectContent>
             </Select>
           </FilterField>
+          <FilterField label="Projekti">
+            <Select value={projectFilter} onValueChange={setProjectFilter}>
+              <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Kaikki projektit</SelectItem>
+                {projects.map((p: any) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </FilterField>
           <FilterField label={`Vaikeustaso ${difficulty[0]}–${difficulty[1]}`}>
             <Slider min={1} max={10} step={1} value={difficulty} onValueChange={(v) => setDifficulty([v[0], v[1]] as [number, number])} className="w-44" />
           </FilterField>
@@ -126,28 +138,32 @@ function ExperimentsPage() {
         <TabsContent value="grid" className="mt-4">
           {filtered.length === 0 ? <EmptyState title="Yksikään koe ei vastaa hakua" description="Kokeile poistaa suodattimia." /> : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((e: any) => (
-                <Link to="/experiments/$id" params={{ id: e.id }} key={e.id} className="surface-card group p-5 hover:border-primary/40 transition relative overflow-hidden">
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition" />
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="text-xs text-primary">{e.experiment_date} · {e.category || "—"}</div>
-                      <h3 className="font-display text-lg font-semibold mt-1 leading-tight">{e.title}</h3>
+              {filtered.map((e: any) => {
+                const projectName = e.project_id ? (projects.find((p: any) => p.id === e.project_id)?.name ?? null) : null;
+                return (
+                  <Link to="/experiments/$id" params={{ id: e.id }} key={e.id} className="surface-card group p-5 hover:border-primary/40 transition relative overflow-hidden">
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition" />
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="text-xs text-primary">{e.experiment_date} · {e.category || "—"}</div>
+                        <h3 className="font-display text-lg font-semibold mt-1 leading-tight">{e.title}</h3>
+                        {projectName && <div className="mt-0.5 text-xs text-muted-foreground">{projectName}</div>}
+                      </div>
+                      <div className="shrink-0">
+                        {e.score_total != null ? <ScoreRing value={e.score_total} size={52} /> : <StatusBadge status={e.status} />}
+                      </div>
                     </div>
-                    <div className="shrink-0">
-                      {e.score_total != null ? <ScoreRing value={e.score_total} size={52} /> : <StatusBadge status={e.status} />}
+                    <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{e.task_description || e.background_context}</p>
+                    <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                      <span>Vaikeus {e.difficulty}/10 · {e.estimated_time_minutes ?? "—"} min</span>
+                      <StatusBadge status={e.status} />
                     </div>
-                  </div>
-                  <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{e.task_description || e.background_context}</p>
-                  <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                    <span>Vaikeus {e.difficulty}/10 · {e.estimated_time_minutes ?? "—"} min</span>
-                    <StatusBadge status={e.status} />
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {(e.tools_needed || []).slice(0, 4).map((t: string) => <Chip key={t}>{t}</Chip>)}
-                  </div>
-                </Link>
-              ))}
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {(e.tools_needed || []).slice(0, 4).map((t: string) => <Chip key={t}>{t}</Chip>)}
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           )}
         </TabsContent>
@@ -181,6 +197,15 @@ function ExperimentsPage() {
                 </Select>
               </R>
             </div>
+            <R label="Projekti">
+              <Select value={draft.project_id ?? "none"} onValueChange={(v) => setDraft({ ...draft, project_id: v === "none" ? null : v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Ei projektia</SelectItem>
+                  {projects.map((p: any) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </R>
             <R label="Tarvittavat työkalut (pilkulla)"><Input value={arrayToCsv(draft.tools_needed)} onChange={(e) => setDraft({ ...draft, tools_needed: csvToArray(e.target.value) })} /></R>
             <R label="Taustakonteksti"><Textarea rows={2} value={draft.background_context || ""} onChange={(e) => setDraft({ ...draft, background_context: e.target.value })} /></R>
             <R label="Tehtävän kuvaus"><Textarea rows={2} value={draft.task_description || ""} onChange={(e) => setDraft({ ...draft, task_description: e.target.value })} /></R>

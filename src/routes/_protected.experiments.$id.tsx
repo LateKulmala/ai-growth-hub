@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ExternalLink, Save, Trash2, Play, CheckCircle2, Target, Clock, FlaskConical, Sparkles, Wrench, BookOpen, Lightbulb } from "lucide-react";
-import { rowQuery } from "@/lib/queries";
+import { rowQuery, listQuery } from "@/lib/queries";
 import { useUpsert, useDelete, arrayToCsv, csvToArray } from "@/lib/mutations";
 import { PageHeader, StatusBadge, Chip, ScoreRing } from "@/components/ui-bits";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ const SCORE_FIELDS = [
 function ExperimentDetail() {
   const { id } = Route.useParams();
   const e = useSuspenseQuery(rowQuery<any>("experiments", id)).data;
+  const projects = useSuspenseQuery(listQuery<any>("projects")).data;
   const upsert = useUpsert("experiments");
   const del = useDelete("experiments");
   const nav = useNavigate();
@@ -37,6 +38,7 @@ function ExperimentDetail() {
   useEffect(() => setF(e), [e?.id]);
   if (!e) return <div className="p-4">Ei löytynyt</div>;
   const v = f ?? e;
+  const projectName = v.project_id ? (projects.find((p: any) => p.id === v.project_id)?.name ?? null) : null;
 
   const computedTotal = useMemo(() => {
     return SCORE_FIELDS.reduce((sum, s) => sum + (Number(v[s.key]) || 0), 0);
@@ -63,6 +65,13 @@ function ExperimentDetail() {
           <Button variant="destructive" size="icon" onClick={() => del.mutate(e.id, { onSuccess: () => nav({ to: "/experiments" }) })}><Trash2 className="h-4 w-4" /></Button>
         </>}
       />
+      {projectName && (
+        <div className="-mt-4">
+          <Link to="/projects/$id" params={{ id: v.project_id }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition">
+            Projekti: <span className="text-primary font-medium ml-1">{projectName}</span>
+          </Link>
+        </div>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-4">
         <div className="surface-card relative overflow-hidden p-6 lg:col-span-1 flex items-center gap-4">
@@ -236,6 +245,15 @@ function ExperimentDetail() {
                 </Select>
               </Field>
             </div>
+            <Field label="Projekti">
+              <Select value={v.project_id ?? "none"} onValueChange={(x) => set({ project_id: x === "none" ? null : x })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Ei projektia</SelectItem>
+                  {projects.map((p: any) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </Field>
             <Button onClick={() => upsert.mutate(v)}><Save className="h-4 w-4 mr-1" />Tallenna tiedot</Button>
           </div>
         </TabsContent>

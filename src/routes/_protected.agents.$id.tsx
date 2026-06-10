@@ -21,6 +21,7 @@ function AgentDetail() {
   const { id } = Route.useParams();
   const a = useSuspenseQuery(rowQuery<any>("agents", id)).data;
   const runs = useSuspenseQuery(listQuery<any>("agent_runs", { column: "started_at" })).data.filter((r: any) => r.agent_id === id);
+  const projects = useSuspenseQuery(listQuery<any>("projects")).data;
   const upsert = useUpsert("agents");
   const del = useDelete("agents");
   const nav = useNavigate();
@@ -28,6 +29,7 @@ function AgentDetail() {
   useEffect(() => setF(a), [a?.id]);
   if (!a) return <div className="p-4">Ei löytynyt</div>;
   const v = f ?? a;
+  const currentProject = v.project_id ? projects.find((p: any) => p.id === v.project_id) : null;
 
   return (
     <div className="space-y-6">
@@ -41,6 +43,7 @@ function AgentDetail() {
       <div className="surface-card p-6 space-y-4">
         <div className="flex items-center gap-3"><StatusBadge status={v.status} />
           {v.n8n_workflow_url && <a className="text-xs text-primary inline-flex items-center gap-1" href={v.n8n_workflow_url} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3" />n8n-työnkulku</a>}
+          {currentProject && <Link to="/projects/$id" params={{ id: v.project_id }} className="text-xs text-primary">Kuuluu projektiin: {currentProject.name}</Link>}
         </div>
         <div className="grid sm:grid-cols-2 gap-4">
           <F label="Nimi"><Input value={v.name || ""} onChange={(e) => setF({ ...v, name: e.target.value })} /></F>
@@ -69,6 +72,15 @@ function AgentDetail() {
           </F>
           <F label="Onnistumisaste (0–1)"><Input type="number" step="0.01" min={0} max={1} value={v.success_rate ?? 0} onChange={(e) => setF({ ...v, success_rate: Number(e.target.value) })} /></F>
           <F label="n8n-osoite"><Input value={v.n8n_workflow_url || ""} onChange={(e) => setF({ ...v, n8n_workflow_url: e.target.value })} /></F>
+          <F label="Projekti">
+            <Select value={v.project_id ?? "none"} onValueChange={(x) => setF({ ...v, project_id: x === "none" ? null : x })}>
+              <SelectTrigger><SelectValue placeholder="Ei projektia" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Ei projektia</SelectItem>
+                {projects.map((p: any) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </F>
         </div>
         <F label="Kuvaus"><Textarea rows={3} value={v.description || ""} onChange={(e) => setF({ ...v, description: e.target.value })} /></F>
         <F label="Syöte"><Textarea rows={2} value={v.input_description || ""} onChange={(e) => setF({ ...v, input_description: e.target.value })} /></F>

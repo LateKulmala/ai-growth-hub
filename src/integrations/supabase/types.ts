@@ -86,6 +86,7 @@ export type Database = {
           name: string
           notes: string | null
           output_description: string | null
+          project_id: string | null
           role: string | null
           status: string
           success_rate: number | null
@@ -104,6 +105,7 @@ export type Database = {
           name: string
           notes?: string | null
           output_description?: string | null
+          project_id?: string | null
           role?: string | null
           status?: string
           success_rate?: number | null
@@ -122,6 +124,7 @@ export type Database = {
           name?: string
           notes?: string | null
           output_description?: string | null
+          project_id?: string | null
           role?: string | null
           status?: string
           success_rate?: number | null
@@ -129,7 +132,15 @@ export type Database = {
           trigger_type?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "agents_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ai_news: {
         Row: {
@@ -360,6 +371,7 @@ export type Database = {
           experiment_date: string
           id: string
           next_experiment_idea: string | null
+          project_id: string | null
           result_summary: string | null
           result_url: string | null
           score_creativity: number | null
@@ -388,6 +400,7 @@ export type Database = {
           experiment_date?: string
           id?: string
           next_experiment_idea?: string | null
+          project_id?: string | null
           result_summary?: string | null
           result_url?: string | null
           score_creativity?: number | null
@@ -416,6 +429,7 @@ export type Database = {
           experiment_date?: string
           id?: string
           next_experiment_idea?: string | null
+          project_id?: string | null
           result_summary?: string | null
           result_url?: string | null
           score_creativity?: number | null
@@ -434,7 +448,15 @@ export type Database = {
           updated_at?: string
           what_i_learned?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "experiments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       learning_journal: {
         Row: {
@@ -550,48 +572,145 @@ export type Database = {
         }
         Relationships: []
       }
+      project_files: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          notes: string | null
+          project_id: string
+          storage_path: string | null
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind?: string
+          notes?: string | null
+          project_id: string
+          storage_path?: string | null
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          notes?: string | null
+          project_id?: string
+          storage_path?: string | null
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_files_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_links: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          label: string | null
+          project_id: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind?: string
+          label?: string | null
+          project_id: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          label?: string | null
+          project_id?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_links_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           created_at: string
           demo_url: string | null
           description: string | null
+          future_ideas: string | null
           github_url: string | null
           id: string
           learnings: string | null
           name: string
           next_improvements: string | null
+          notes: string | null
           problem_solved: string | null
+          purpose: string | null
           status: string
+          technologies: string[] | null
           tools_used: string[] | null
           updated_at: string
+          value_created: string | null
         }
         Insert: {
           created_at?: string
           demo_url?: string | null
           description?: string | null
+          future_ideas?: string | null
           github_url?: string | null
           id?: string
           learnings?: string | null
           name: string
           next_improvements?: string | null
+          notes?: string | null
           problem_solved?: string | null
+          purpose?: string | null
           status?: string
+          technologies?: string[] | null
           tools_used?: string[] | null
           updated_at?: string
+          value_created?: string | null
         }
         Update: {
           created_at?: string
           demo_url?: string | null
           description?: string | null
+          future_ideas?: string | null
           github_url?: string | null
           id?: string
           learnings?: string | null
           name?: string
           next_improvements?: string | null
+          notes?: string | null
           problem_solved?: string | null
+          purpose?: string | null
           status?: string
+          technologies?: string[] | null
           tools_used?: string[] | null
           updated_at?: string
+          value_created?: string | null
         }
         Relationships: []
       }
