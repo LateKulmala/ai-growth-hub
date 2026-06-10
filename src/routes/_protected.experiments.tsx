@@ -66,7 +66,7 @@ function ExperimentsPage() {
             <R label="Title"><Input value={draft.title || ""} onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></R>
             <div className="grid grid-cols-3 gap-3">
               <R label="Difficulty 1-10"><Input type="number" min={1} max={10} value={draft.difficulty || 5} onChange={(e) => setDraft({ ...draft, difficulty: Number(e.target.value) })} /></R>
-              <R label="Estimated time"><Input value={draft.estimated_time_minutes || ""} onChange={(e) => setDraft({ ...draft, estimated_time_minutes: e.target.value })} /></R>
+              <R label="Estimated time (minutes)"><Input type="number" min={0} value={draft.estimated_time_minutes ?? ""} onChange={(e) => setDraft({ ...draft, estimated_time_minutes: e.target.value === "" ? null : Number(e.target.value) })} /></R>
               <R label="Status">
                 <Select value={draft.status} onValueChange={(v) => setDraft({ ...draft, status: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>

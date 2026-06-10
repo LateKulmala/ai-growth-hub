@@ -46,7 +46,7 @@ function ExperimentDetail() {
           </div>
           <F label="Title"><Input value={v.title || ""} onChange={(x) => setF({ ...v, title: x.target.value })} /></F>
           <div className="grid grid-cols-2 gap-3">
-            <F label="Estimated time"><Input value={v.estimated_time_minutes || ""} onChange={(x) => setF({ ...v, estimated_time_minutes: x.target.value })} /></F>
+            <F label="Estimated time (minutes)"><Input type="number" min={0} value={v.estimated_time_minutes ?? ""} onChange={(x) => setF({ ...v, estimated_time_minutes: x.target.value === "" ? null : Number(x.target.value) })} /></F>
             <F label="Status">
               <Select value={v.status} onValueChange={(x) => setF({ ...v, status: x })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
