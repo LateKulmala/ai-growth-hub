@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { isAuthed } from "@/lib/auth";
@@ -8,20 +8,7 @@ export const Route = createFileRoute("/_protected")({
   component: ProtectedLayout,
 });
 
-function ProtectedLayout() {
-  const navigate = useNavigate();
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if (!isAuthed()) {
-      navigate({ to: "/login", replace: true });
-    } else {
-      setReady(true);
-    }
-  }, [navigate]);
-
-  if (!ready) return null;
-
+function Shell({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <div className="grid-bg flex min-h-screen w-full">
@@ -39,11 +26,34 @@ function ProtectedLayout() {
               </span>
             </div>
           </header>
-          <main className="flex-1 p-4 sm:p-6 max-w-[1600px] w-full mx-auto">
-            <Outlet />
-          </main>
+          <main className="flex-1 p-4 sm:p-6 max-w-[1600px] w-full mx-auto">{children}</main>
         </div>
       </div>
     </SidebarProvider>
+  );
+}
+
+function ProtectedLayout() {
+  const navigate = useNavigate();
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthed()) {
+      navigate({ to: "/login", replace: true });
+    } else {
+      setReady(true);
+    }
+  }, [navigate]);
+
+  return (
+    <Shell>
+      {ready ? (
+        <Suspense fallback={<div className="text-sm text-muted-foreground">Loading…</div>}>
+          <Outlet />
+        </Suspense>
+      ) : (
+        <div className="text-sm text-muted-foreground">Authenticating…</div>
+      )}
+    </Shell>
   );
 }
