@@ -18,40 +18,53 @@ export type Database = {
         Row: {
           agent_id: string | null
           created_at: string
-          duration_ms: number | null
-          error: string | null
+          duration_seconds: number | null
+          error_message: string | null
+          finished_at: string | null
           id: string
-          input: Json | null
-          output: Json | null
-          ran_at: string
+          input_data: Json | null
+          output_data: Json | null
+          score: number | null
+          started_at: string
           status: string
           updated_at: string
         }
         Insert: {
           agent_id?: string | null
           created_at?: string
-          duration_ms?: number | null
-          error?: string | null
+          duration_seconds?: number | null
+          error_message?: string | null
+          finished_at?: string | null
           id?: string
-          input?: Json | null
-          output?: Json | null
-          ran_at?: string
+          input_data?: Json | null
+          output_data?: Json | null
+          score?: number | null
+          started_at?: string
           status?: string
           updated_at?: string
         }
         Update: {
           agent_id?: string | null
           created_at?: string
-          duration_ms?: number | null
-          error?: string | null
+          duration_seconds?: number | null
+          error_message?: string | null
+          finished_at?: string | null
           id?: string
-          input?: Json | null
-          output?: Json | null
-          ran_at?: string
+          input_data?: Json | null
+          output_data?: Json | null
+          score?: number | null
+          started_at?: string
           status?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "agent_runs_agent_fk"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "agent_runs_agent_id_fkey"
             columns: ["agent_id"]
@@ -67,16 +80,16 @@ export type Database = {
           description: string | null
           id: string
           improvement_ideas: string | null
-          input: string | null
-          last_run: string | null
-          n8n_url: string | null
+          input_description: string | null
+          last_run_at: string | null
+          n8n_workflow_url: string | null
           name: string
           notes: string | null
-          output: string | null
+          output_description: string | null
           role: string | null
           status: string
           success_rate: number | null
-          tools: string[] | null
+          tools_used: string[] | null
           trigger_type: string | null
           updated_at: string
         }
@@ -85,16 +98,16 @@ export type Database = {
           description?: string | null
           id?: string
           improvement_ideas?: string | null
-          input?: string | null
-          last_run?: string | null
-          n8n_url?: string | null
+          input_description?: string | null
+          last_run_at?: string | null
+          n8n_workflow_url?: string | null
           name: string
           notes?: string | null
-          output?: string | null
+          output_description?: string | null
           role?: string | null
           status?: string
           success_rate?: number | null
-          tools?: string[] | null
+          tools_used?: string[] | null
           trigger_type?: string | null
           updated_at?: string
         }
@@ -103,16 +116,16 @@ export type Database = {
           description?: string | null
           id?: string
           improvement_ideas?: string | null
-          input?: string | null
-          last_run?: string | null
-          n8n_url?: string | null
+          input_description?: string | null
+          last_run_at?: string | null
+          n8n_workflow_url?: string | null
           name?: string
           notes?: string | null
-          output?: string | null
+          output_description?: string | null
           role?: string | null
           status?: string
           success_rate?: number | null
-          tools?: string[] | null
+          tools_used?: string[] | null
           trigger_type?: string | null
           updated_at?: string
         }
@@ -166,6 +179,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "ai_news_related_briefing_fk"
+            columns: ["related_briefing_id"]
+            isOneToOne: false
+            referencedRelation: "daily_briefings"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "ai_news_related_briefing_id_fkey"
             columns: ["related_briefing_id"]
             isOneToOne: false
@@ -182,12 +202,12 @@ export type Database = {
           hot_topics: string[] | null
           id: string
           key_links: Json | null
+          learning_recommendation: string | null
           recommended_articles: Json | null
           related_experiment_id: string | null
           telegram_sent: boolean
           title: string
           updated_at: string
-          what_to_learn: string | null
           why_it_matters: string | null
         }
         Insert: {
@@ -197,12 +217,12 @@ export type Database = {
           hot_topics?: string[] | null
           id?: string
           key_links?: Json | null
+          learning_recommendation?: string | null
           recommended_articles?: Json | null
           related_experiment_id?: string | null
           telegram_sent?: boolean
           title: string
           updated_at?: string
-          what_to_learn?: string | null
           why_it_matters?: string | null
         }
         Update: {
@@ -212,15 +232,23 @@ export type Database = {
           hot_topics?: string[] | null
           id?: string
           key_links?: Json | null
+          learning_recommendation?: string | null
           recommended_articles?: Json | null
           related_experiment_id?: string | null
           telegram_sent?: boolean
           title?: string
           updated_at?: string
-          what_to_learn?: string | null
           why_it_matters?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "daily_briefings_related_experiment_fk"
+            columns: ["related_experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       experiment_reviews: {
         Row: {
@@ -258,6 +286,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "experiment_reviews_experiment_fk"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "experiment_reviews_experiment_id_fkey"
             columns: ["experiment_id"]
             isOneToOne: false
@@ -269,114 +304,117 @@ export type Database = {
       experiments: {
         Row: {
           ai_feedback: string | null
-          background: string | null
+          background_context: string | null
           category: string | null
           created_at: string
           difficulty: number | null
-          estimated_time: string | null
+          estimated_time_minutes: number | null
           experiment_date: string
           id: string
-          instructions: string | null
-          learnings: string | null
-          next_idea: string | null
+          next_experiment_idea: string | null
           result_summary: string | null
           result_url: string | null
-          score: number | null
+          score_total: number | null
           self_reflection: string | null
           status: string
+          step_by_step_instructions: string | null
           success_criteria: string | null
-          task: string | null
+          task_description: string | null
           title: string
           tools_needed: string[] | null
           updated_at: string
+          what_i_learned: string | null
         }
         Insert: {
           ai_feedback?: string | null
-          background?: string | null
+          background_context?: string | null
           category?: string | null
           created_at?: string
           difficulty?: number | null
-          estimated_time?: string | null
+          estimated_time_minutes?: number | null
           experiment_date?: string
           id?: string
-          instructions?: string | null
-          learnings?: string | null
-          next_idea?: string | null
+          next_experiment_idea?: string | null
           result_summary?: string | null
           result_url?: string | null
-          score?: number | null
+          score_total?: number | null
           self_reflection?: string | null
           status?: string
+          step_by_step_instructions?: string | null
           success_criteria?: string | null
-          task?: string | null
+          task_description?: string | null
           title: string
           tools_needed?: string[] | null
           updated_at?: string
+          what_i_learned?: string | null
         }
         Update: {
           ai_feedback?: string | null
-          background?: string | null
+          background_context?: string | null
           category?: string | null
           created_at?: string
           difficulty?: number | null
-          estimated_time?: string | null
+          estimated_time_minutes?: number | null
           experiment_date?: string
           id?: string
-          instructions?: string | null
-          learnings?: string | null
-          next_idea?: string | null
+          next_experiment_idea?: string | null
           result_summary?: string | null
           result_url?: string | null
-          score?: number | null
+          score_total?: number | null
           self_reflection?: string | null
           status?: string
+          step_by_step_instructions?: string | null
           success_criteria?: string | null
-          task?: string | null
+          task_description?: string | null
           title?: string
           tools_needed?: string[] | null
           updated_at?: string
+          what_i_learned?: string | null
         }
         Relationships: []
       }
       learning_journal: {
         Row: {
-          built: string | null
           created_at: string
-          difficult: string | null
+          energy_level: number | null
           entry_date: string
           id: string
-          improve_next: string | null
-          learned: string | null
           mood: string | null
-          surprised: string | null
+          next_improvement: string | null
           tags: string[] | null
           updated_at: string
+          what_i_built: string | null
+          what_i_learned: string | null
+          what_surprised_me: string | null
+          what_was_difficult: string | null
         }
         Insert: {
-          built?: string | null
           created_at?: string
-          difficult?: string | null
+          energy_level?: number | null
           entry_date?: string
           id?: string
-          improve_next?: string | null
-          learned?: string | null
           mood?: string | null
-          surprised?: string | null
+          next_improvement?: string | null
           tags?: string[] | null
           updated_at?: string
+          what_i_built?: string | null
+          what_i_learned?: string | null
+          what_surprised_me?: string | null
+          what_was_difficult?: string | null
         }
         Update: {
-          built?: string | null
           created_at?: string
-          difficult?: string | null
+          energy_level?: number | null
           entry_date?: string
           id?: string
-          improve_next?: string | null
-          learned?: string | null
           mood?: string | null
-          surprised?: string | null
+          next_improvement?: string | null
           tags?: string[] | null
           updated_at?: string
+          what_i_built?: string | null
+          what_i_learned?: string | null
+          what_surprised_me?: string | null
+          what_was_difficult?: string | null
         }
         Relationships: []
       }
@@ -441,9 +479,9 @@ export type Database = {
           learnings: string | null
           name: string
           next_improvements: string | null
-          problem: string | null
+          problem_solved: string | null
           status: string
-          tools: string[] | null
+          tools_used: string[] | null
           updated_at: string
         }
         Insert: {
@@ -455,9 +493,9 @@ export type Database = {
           learnings?: string | null
           name: string
           next_improvements?: string | null
-          problem?: string | null
+          problem_solved?: string | null
           status?: string
-          tools?: string[] | null
+          tools_used?: string[] | null
           updated_at?: string
         }
         Update: {
@@ -469,9 +507,9 @@ export type Database = {
           learnings?: string | null
           name?: string
           next_improvements?: string | null
-          problem?: string | null
+          problem_solved?: string | null
           status?: string
-          tools?: string[] | null
+          tools_used?: string[] | null
           updated_at?: string
         }
         Relationships: []
@@ -479,35 +517,53 @@ export type Database = {
       score_events: {
         Row: {
           created_at: string
-          delta: number
-          event_type: string
+          event_date: string
           id: string
-          occurred_at: string
+          points: number
           reason: string | null
-          source_id: string | null
+          related_experiment_id: string | null
+          related_project_id: string | null
+          type: string
           updated_at: string
         }
         Insert: {
           created_at?: string
-          delta?: number
-          event_type: string
+          event_date?: string
           id?: string
-          occurred_at?: string
+          points?: number
           reason?: string | null
-          source_id?: string | null
+          related_experiment_id?: string | null
+          related_project_id?: string | null
+          type: string
           updated_at?: string
         }
         Update: {
           created_at?: string
-          delta?: number
-          event_type?: string
+          event_date?: string
           id?: string
-          occurred_at?: string
+          points?: number
           reason?: string | null
-          source_id?: string | null
+          related_experiment_id?: string | null
+          related_project_id?: string | null
+          type?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "score_events_related_experiment_id_fkey"
+            columns: ["related_experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "score_events_related_project_id_fkey"
+            columns: ["related_project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       skills: {
         Row: {
@@ -543,7 +599,6 @@ export type Database = {
         Row: {
           author: string | null
           comment_analysis: string | null
-          content_idea: string | null
           created_at: string
           discovered_at: string
           id: string
@@ -552,7 +607,8 @@ export type Database = {
           platform: string | null
           post_url: string | null
           relevance_score: number | null
-          response_idea: string | null
+          suggested_content_idea: string | null
+          suggested_response: string | null
           summary: string | null
           topic: string | null
           updated_at: string
@@ -560,7 +616,6 @@ export type Database = {
         Insert: {
           author?: string | null
           comment_analysis?: string | null
-          content_idea?: string | null
           created_at?: string
           discovered_at?: string
           id?: string
@@ -569,7 +624,8 @@ export type Database = {
           platform?: string | null
           post_url?: string | null
           relevance_score?: number | null
-          response_idea?: string | null
+          suggested_content_idea?: string | null
+          suggested_response?: string | null
           summary?: string | null
           topic?: string | null
           updated_at?: string
@@ -577,7 +633,6 @@ export type Database = {
         Update: {
           author?: string | null
           comment_analysis?: string | null
-          content_idea?: string | null
           created_at?: string
           discovered_at?: string
           id?: string
@@ -586,7 +641,8 @@ export type Database = {
           platform?: string | null
           post_url?: string | null
           relevance_score?: number | null
-          response_idea?: string | null
+          suggested_content_idea?: string | null
+          suggested_response?: string | null
           summary?: string | null
           topic?: string | null
           updated_at?: string
@@ -595,44 +651,61 @@ export type Database = {
       }
       telegram_messages: {
         Row: {
-          chat_id: string | null
+          content: string | null
           created_at: string
-          direction: string
           id: string
-          message: string | null
+          message_date: string
+          message_type: string
           related_briefing_id: string | null
+          related_experiment_id: string | null
           sent_at: string
-          status: string | null
+          telegram_status: string | null
           updated_at: string
         }
         Insert: {
-          chat_id?: string | null
+          content?: string | null
           created_at?: string
-          direction?: string
           id?: string
-          message?: string | null
+          message_date?: string
+          message_type?: string
           related_briefing_id?: string | null
+          related_experiment_id?: string | null
           sent_at?: string
-          status?: string | null
+          telegram_status?: string | null
           updated_at?: string
         }
         Update: {
-          chat_id?: string | null
+          content?: string | null
           created_at?: string
-          direction?: string
           id?: string
-          message?: string | null
+          message_date?: string
+          message_type?: string
           related_briefing_id?: string | null
+          related_experiment_id?: string | null
           sent_at?: string
-          status?: string | null
+          telegram_status?: string | null
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "telegram_messages_related_briefing_fk"
+            columns: ["related_briefing_id"]
+            isOneToOne: false
+            referencedRelation: "daily_briefings"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "telegram_messages_related_briefing_id_fkey"
             columns: ["related_briefing_id"]
             isOneToOne: false
             referencedRelation: "daily_briefings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "telegram_messages_related_experiment_id_fkey"
+            columns: ["related_experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
             referencedColumns: ["id"]
           },
         ]
