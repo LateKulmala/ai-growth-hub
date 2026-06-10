@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { isAuthed } from "@/lib/auth";
 
 export const Route = createFileRoute("/_protected")({
+  ssr: false,
   component: ProtectedLayout,
 });
 
