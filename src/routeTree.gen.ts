@@ -20,6 +20,7 @@ import { Route as ProtectedNewsRouteImport } from './routes/_protected.news'
 import { Route as ProtectedJournalRouteImport } from './routes/_protected.journal'
 import { Route as ProtectedExperimentsRouteImport } from './routes/_protected.experiments'
 import { Route as ProtectedBriefingsRouteImport } from './routes/_protected.briefings'
+import { Route as ProtectedAutomationRouteImport } from './routes/_protected.automation'
 import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected.analytics'
 import { Route as ProtectedAgentsRouteImport } from './routes/_protected.agents'
 import { Route as ProtectedProjectsIdRouteImport } from './routes/_protected.projects.$id'
@@ -81,6 +82,11 @@ const ProtectedBriefingsRoute = ProtectedBriefingsRouteImport.update({
   path: '/briefings',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedAutomationRoute = ProtectedAutomationRouteImport.update({
+  id: '/automation',
+  path: '/automation',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedAnalyticsRoute = ProtectedAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/agents': typeof ProtectedAgentsRouteWithChildren
   '/analytics': typeof ProtectedAnalyticsRoute
+  '/automation': typeof ProtectedAutomationRoute
   '/briefings': typeof ProtectedBriefingsRouteWithChildren
   '/experiments': typeof ProtectedExperimentsRouteWithChildren
   '/journal': typeof ProtectedJournalRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/agents': typeof ProtectedAgentsRouteWithChildren
   '/analytics': typeof ProtectedAnalyticsRoute
+  '/automation': typeof ProtectedAutomationRoute
   '/briefings': typeof ProtectedBriefingsRouteWithChildren
   '/experiments': typeof ProtectedExperimentsRouteWithChildren
   '/journal': typeof ProtectedJournalRoute
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_protected/agents': typeof ProtectedAgentsRouteWithChildren
   '/_protected/analytics': typeof ProtectedAnalyticsRoute
+  '/_protected/automation': typeof ProtectedAutomationRoute
   '/_protected/briefings': typeof ProtectedBriefingsRouteWithChildren
   '/_protected/experiments': typeof ProtectedExperimentsRouteWithChildren
   '/_protected/journal': typeof ProtectedJournalRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/agents'
     | '/analytics'
+    | '/automation'
     | '/briefings'
     | '/experiments'
     | '/journal'
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/agents'
     | '/analytics'
+    | '/automation'
     | '/briefings'
     | '/experiments'
     | '/journal'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_protected/agents'
     | '/_protected/analytics'
+    | '/_protected/automation'
     | '/_protected/briefings'
     | '/_protected/experiments'
     | '/_protected/journal'
@@ -310,6 +322,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedBriefingsRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/automation': {
+      id: '/_protected/automation'
+      path: '/automation'
+      fullPath: '/automation'
+      preLoaderRoute: typeof ProtectedAutomationRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/analytics': {
       id: '/_protected/analytics'
       path: '/analytics'
@@ -403,6 +422,7 @@ const ProtectedProjectsRouteWithChildren =
 interface ProtectedRouteChildren {
   ProtectedAgentsRoute: typeof ProtectedAgentsRouteWithChildren
   ProtectedAnalyticsRoute: typeof ProtectedAnalyticsRoute
+  ProtectedAutomationRoute: typeof ProtectedAutomationRoute
   ProtectedBriefingsRoute: typeof ProtectedBriefingsRouteWithChildren
   ProtectedExperimentsRoute: typeof ProtectedExperimentsRouteWithChildren
   ProtectedJournalRoute: typeof ProtectedJournalRoute
@@ -417,6 +437,7 @@ interface ProtectedRouteChildren {
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAgentsRoute: ProtectedAgentsRouteWithChildren,
   ProtectedAnalyticsRoute: ProtectedAnalyticsRoute,
+  ProtectedAutomationRoute: ProtectedAutomationRoute,
   ProtectedBriefingsRoute: ProtectedBriefingsRouteWithChildren,
   ProtectedExperimentsRoute: ProtectedExperimentsRouteWithChildren,
   ProtectedJournalRoute: ProtectedJournalRoute,

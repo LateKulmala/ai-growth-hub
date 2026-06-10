@@ -13,6 +13,7 @@ import {
   Settings,
   LogOut,
   Sparkles,
+  Zap,
 } from "lucide-react";
 
 import {
@@ -59,6 +60,7 @@ const sections = [
     items: [
       { title: "Journal", url: "/journal", icon: BookOpen },
       { title: "Analytics", url: "/analytics", icon: LineChart },
+      { title: "Automation", url: "/automation", icon: Zap },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
   },
