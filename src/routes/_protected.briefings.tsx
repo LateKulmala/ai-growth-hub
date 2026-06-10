@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 export const Route = createFileRoute("/_protected/briefings")({
   component: BriefingsPage,
   errorComponent: ({ error }) => <div className="p-4 text-destructive">{error.message}</div>,
-  notFoundComponent: () => <div className="p-4">Not found</div>,
+  notFoundComponent: () => <div className="p-4">Ei löytynyt</div>,
 });
 
 function BriefingsPage() {
@@ -25,11 +25,11 @@ function BriefingsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Daily AI Briefings" description="5-minute daily intel"
-        actions={<Button onClick={() => { setDraft({ briefing_date: new Date().toISOString().slice(0, 10) }); setOpen(true); }}><Plus className="h-4 w-4 mr-1" />New briefing</Button>} />
+      <PageHeader title="Päiväbriefingit" description="5 minuutin päivittäinen AI-tieto"
+        actions={<Button onClick={() => { setDraft({ briefing_date: new Date().toISOString().slice(0, 10) }); setOpen(true); }}><Plus className="h-4 w-4 mr-1" />Uusi briefing</Button>} />
 
       {briefings.length === 0 ? (
-        <EmptyState title="No briefings yet" description="Your daily intel will land here." />
+        <EmptyState title="Ei briefingejä vielä" description="Päivittäinen tieto saapuu tänne." />
       ) : (
         <div className="space-y-3">
           {briefings.map((b) => (
@@ -52,18 +52,18 @@ function BriefingsPage() {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl">
-          <DialogHeader><DialogTitle>New briefing</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Uusi briefing</DialogTitle></DialogHeader>
           <div className="space-y-3">
-            <R label="Date"><Input type="date" value={draft.briefing_date || ""} onChange={(e) => setDraft({ ...draft, briefing_date: e.target.value })} /></R>
-            <R label="Title"><Input value={draft.title || ""} onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></R>
-            <R label="Executive summary"><Textarea rows={3} value={draft.executive_summary || ""} onChange={(e) => setDraft({ ...draft, executive_summary: e.target.value })} /></R>
-            <R label="Hot topics (csv)"><Input value={arrayToCsv(draft.hot_topics)} onChange={(e) => setDraft({ ...draft, hot_topics: csvToArray(e.target.value) })} /></R>
-            <R label="Why it matters"><Textarea rows={2} value={draft.why_it_matters || ""} onChange={(e) => setDraft({ ...draft, why_it_matters: e.target.value })} /></R>
-            <R label="What to learn"><Textarea rows={2} value={draft.learning_recommendation || ""} onChange={(e) => setDraft({ ...draft, learning_recommendation: e.target.value })} /></R>
+            <R label="Päivämäärä"><Input type="date" value={draft.briefing_date || ""} onChange={(e) => setDraft({ ...draft, briefing_date: e.target.value })} /></R>
+            <R label="Otsikko"><Input value={draft.title || ""} onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></R>
+            <R label="Tiivistelmä"><Textarea rows={3} value={draft.executive_summary || ""} onChange={(e) => setDraft({ ...draft, executive_summary: e.target.value })} /></R>
+            <R label="Kuumat aiheet (pilkulla)"><Input value={arrayToCsv(draft.hot_topics)} onChange={(e) => setDraft({ ...draft, hot_topics: csvToArray(e.target.value) })} /></R>
+            <R label="Miksi tämä on tärkeää"><Textarea rows={2} value={draft.why_it_matters || ""} onChange={(e) => setDraft({ ...draft, why_it_matters: e.target.value })} /></R>
+            <R label="Mitä opettelisit"><Textarea rows={2} value={draft.learning_recommendation || ""} onChange={(e) => setDraft({ ...draft, learning_recommendation: e.target.value })} /></R>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => upsert.mutate(draft, { onSuccess: () => setOpen(false) })} disabled={!draft.title || upsert.isPending}>Create</Button>
+            <Button variant="ghost" onClick={() => setOpen(false)}>Peruuta</Button>
+            <Button onClick={() => upsert.mutate(draft, { onSuccess: () => setOpen(false) })} disabled={!draft.title || upsert.isPending}>Luo</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

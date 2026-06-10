@@ -13,7 +13,7 @@ import { Save, User } from "lucide-react";
 export const Route = createFileRoute("/_protected/portfolio")({
   component: PortfolioPage,
   errorComponent: ({ error }) => <div className="p-4 text-destructive">{error.message}</div>,
-  notFoundComponent: () => <div className="p-4">Not found</div>,
+  notFoundComponent: () => <div className="p-4">Ei löytynyt</div>,
 });
 
 function PortfolioPage() {
@@ -26,7 +26,7 @@ function PortfolioPage() {
 
   const [f, setF] = useState<any>(null);
   const v = f ?? profile ?? {
-    display_name: "AI Operator",
+    display_name: "AI-operaattori",
     bio: "",
     focus_areas: [],
     tools: [],
@@ -41,11 +41,11 @@ function PortfolioPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="My AI Portfolio"
-        description="Your living profile · proof of skills and growth"
+        title="AI-portfolio"
+        description="Sinun elävä profiilisi · todiste osaamisesta ja kehityksestä"
         actions={
           <Button onClick={() => upsert.mutate(v)} disabled={upsert.isPending}>
-            <Save className="h-4 w-4 mr-1" /> Save profile
+            <Save className="h-4 w-4 mr-1" /> Tallenna profiili
           </Button>
         }
       />
@@ -63,37 +63,37 @@ function PortfolioPage() {
             />
           </div>
 
-          <Field label="Short bio">
+          <Field label="Lyhyt bio">
             <Textarea rows={3} value={v.bio || ""} onChange={(e) => setF({ ...v, bio: e.target.value })} />
           </Field>
 
           <div className="grid sm:grid-cols-2 gap-4">
-            <Field label="Focus areas (comma separated)">
+            <Field label="Painopistealueet (pilkulla erotettuna)">
               <Input value={arrayToCsv(v.focus_areas)} onChange={(e) => setF({ ...v, focus_areas: csvToArray(e.target.value) })} />
             </Field>
-            <Field label="Tools (comma separated)">
+            <Field label="Työkalut (pilkulla erotettuna)">
               <Input value={arrayToCsv(v.tools)} onChange={(e) => setF({ ...v, tools: csvToArray(e.target.value) })} />
             </Field>
-            <Field label="Skills (comma separated)">
+            <Field label="Taidot (pilkulla erotettuna)">
               <Input value={arrayToCsv(v.skills)} onChange={(e) => setF({ ...v, skills: csvToArray(e.target.value) })} />
             </Field>
-            <Field label="Strengths">
+            <Field label="Vahvuudet">
               <Input value={arrayToCsv(v.strengths)} onChange={(e) => setF({ ...v, strengths: csvToArray(e.target.value) })} />
             </Field>
-            <Field label="Development goals">
+            <Field label="Kehittymistavoitteet">
               <Input value={arrayToCsv(v.development_goals)} onChange={(e) => setF({ ...v, development_goals: csvToArray(e.target.value) })} />
             </Field>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Learning score">
+              <Field label="Oppimispisteet">
                 <Input type="number" value={v.learning_score ?? 0} onChange={(e) => setF({ ...v, learning_score: Number(e.target.value) })} />
               </Field>
-              <Field label="Weekly streak">
+              <Field label="Viikkoputki">
                 <Input type="number" value={v.weekly_streak ?? 0} onChange={(e) => setF({ ...v, weekly_streak: Number(e.target.value) })} />
               </Field>
             </div>
           </div>
 
-          <Field label="Public portfolio summary">
+          <Field label="Julkinen portfolioyhteenveto">
             <Textarea rows={4} value={v.public_summary || ""} onChange={(e) => setF({ ...v, public_summary: e.target.value })} />
           </Field>
         </div>
@@ -107,11 +107,11 @@ function PortfolioPage() {
             summary={v.public_summary}
           />
           <div className="surface-card p-5">
-            <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">At a glance</div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Yhdellä silmäyksellä</div>
             <ul className="space-y-1 text-sm">
-              <li>{projects.length} projects</li>
-              <li>{agents.length} agents / automations</li>
-              <li>{journal.length} journal entries</li>
+              <li>{projects.length} projektia</li>
+              <li>{agents.length} agenttia / automaatiota</li>
+              <li>{journal.length} päiväkirjamerkintää</li>
             </ul>
           </div>
         </div>
@@ -134,9 +134,9 @@ function PreviewCard({ name, bio, skills, tools, summary }: any) {
     <div className="surface-card p-5 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10" />
       <div className="relative">
-        <div className="text-xs uppercase tracking-wider text-primary">Public preview</div>
+        <div className="text-xs uppercase tracking-wider text-primary">Julkinen esikatselu</div>
         <div className="mt-1 font-display text-xl font-bold">{name}</div>
-        <p className="mt-2 text-sm text-muted-foreground">{bio || "Add a bio."}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{bio || "Lisää bio."}</p>
         {summary && <p className="mt-2 text-sm">{summary}</p>}
         <div className="mt-3 flex flex-wrap gap-1.5">
           {(skills || []).slice(0, 8).map((s: string) => <Chip key={s}>{s}</Chip>)}

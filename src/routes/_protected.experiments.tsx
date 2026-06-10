@@ -17,7 +17,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 export const Route = createFileRoute("/_protected/experiments")({
   component: ExperimentsPage,
   errorComponent: ({ error }) => <div className="p-4 text-destructive">{error.message}</div>,
-  notFoundComponent: () => <div className="p-4">Not found</div>,
+  notFoundComponent: () => <div className="p-4">Ei löytynyt</div>,
 });
 
 function ExperimentsPage() {
@@ -66,65 +66,65 @@ function ExperimentsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="AI Experiments"
-        description="Practical AI workouts · build proof through doing"
-        actions={<Button onClick={() => { setDraft(blankDraft()); setOpen(true); }}><Plus className="h-4 w-4 mr-1" />New experiment</Button>}
+        title="AI-kokeet"
+        description="Käytännön AI-treenit · todista oppimisesi tekemällä"
+        actions={<Button onClick={() => { setDraft(blankDraft()); setOpen(true); }}><Plus className="h-4 w-4 mr-1" />Uusi koe</Button>}
       />
 
       <div className="grid gap-3 sm:grid-cols-4">
-        <Stat label="Total" value={stats.total} />
-        <Stat label="Completed" value={stats.completed} tone="primary" />
-        <Stat label="In progress" value={stats.inProgress} tone="accent" />
-        <Stat label="Avg score" value={stats.avg} tone="success" />
+        <Stat label="Yhteensä" value={stats.total} />
+        <Stat label="Valmiita" value={stats.completed} tone="primary" />
+        <Stat label="Kesken" value={stats.inProgress} tone="accent" />
+        <Stat label="Keskipisteet" value={stats.avg} tone="success" />
       </div>
 
       <div className="surface-card p-4">
         <div className="flex flex-wrap items-end gap-4">
           <div className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-muted-foreground">
-            <Filter className="h-3.5 w-3.5" /> Filters
+            <Filter className="h-3.5 w-3.5" /> Suodattimet
           </div>
-          <FilterField label="Status">
+          <FilterField label="Tila">
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="planned">Planned</SelectItem>
-                <SelectItem value="in_progress">In progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="skipped">Skipped</SelectItem>
+                <SelectItem value="all">Kaikki</SelectItem>
+                <SelectItem value="planned">Suunniteltu</SelectItem>
+                <SelectItem value="in_progress">Kesken</SelectItem>
+                <SelectItem value="completed">Valmis</SelectItem>
+                <SelectItem value="skipped">Ohitettu</SelectItem>
               </SelectContent>
             </Select>
           </FilterField>
-          <FilterField label="Category">
+          <FilterField label="Kategoria">
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All categories</SelectItem>
+                <SelectItem value="all">Kaikki kategoriat</SelectItem>
                 {categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
               </SelectContent>
             </Select>
           </FilterField>
-          <FilterField label={`Difficulty ${difficulty[0]}–${difficulty[1]}`}>
+          <FilterField label={`Vaikeustaso ${difficulty[0]}–${difficulty[1]}`}>
             <Slider min={1} max={10} step={1} value={difficulty} onValueChange={(v) => setDifficulty([v[0], v[1]] as [number, number])} className="w-44" />
           </FilterField>
-          <FilterField label={`Score ${score[0]}–${score[1]}`}>
+          <FilterField label={`Pisteet ${score[0]}–${score[1]}`}>
             <Slider min={0} max={100} step={5} value={score} onValueChange={(v) => setScore([v[0], v[1]] as [number, number])} className="w-44" />
           </FilterField>
           {filtersActive && (
-            <Button variant="ghost" size="sm" onClick={reset}><X className="h-3.5 w-3.5 mr-1" />Clear</Button>
+            <Button variant="ghost" size="sm" onClick={reset}><X className="h-3.5 w-3.5 mr-1" />Tyhjennä</Button>
           )}
-          <div className="ml-auto text-xs text-muted-foreground">{filtered.length} of {items.length}</div>
+          <div className="ml-auto text-xs text-muted-foreground">{filtered.length} / {items.length}</div>
         </div>
       </div>
 
       <Tabs defaultValue="grid">
         <TabsList>
-          <TabsTrigger value="grid"><LayoutGrid className="h-3.5 w-3.5 mr-1" />Grid</TabsTrigger>
-          <TabsTrigger value="calendar"><CalendarDays className="h-3.5 w-3.5 mr-1" />Calendar</TabsTrigger>
+          <TabsTrigger value="grid"><LayoutGrid className="h-3.5 w-3.5 mr-1" />Ruudukko</TabsTrigger>
+          <TabsTrigger value="calendar"><CalendarDays className="h-3.5 w-3.5 mr-1" />Kalenteri</TabsTrigger>
         </TabsList>
 
         <TabsContent value="grid" className="mt-4">
-          {filtered.length === 0 ? <EmptyState title="No experiments match" description="Try clearing some filters." /> : (
+          {filtered.length === 0 ? <EmptyState title="Yksikään koe ei vastaa hakua" description="Kokeile poistaa suodattimia." /> : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filtered.map((e: any) => (
                 <Link to="/experiments/$id" params={{ id: e.id }} key={e.id} className="surface-card group p-5 hover:border-primary/40 transition relative overflow-hidden">
@@ -140,7 +140,7 @@ function ExperimentsPage() {
                   </div>
                   <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{e.task_description || e.background_context}</p>
                   <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                    <span>Diff {e.difficulty}/10 · {e.estimated_time_minutes ?? "—"}m</span>
+                    <span>Vaikeus {e.difficulty}/10 · {e.estimated_time_minutes ?? "—"} min</span>
                     <StatusBadge status={e.status} />
                   </div>
                   <div className="mt-2 flex flex-wrap gap-1.5">
@@ -159,37 +159,37 @@ function ExperimentsPage() {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl">
-          <DialogHeader><DialogTitle>New experiment</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Uusi AI-koe</DialogTitle></DialogHeader>
           <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2">
             <div className="grid grid-cols-2 gap-3">
-              <R label="Date"><Input type="date" value={draft.experiment_date || ""} onChange={(e) => setDraft({ ...draft, experiment_date: e.target.value })} /></R>
-              <R label="Category"><Input value={draft.category || ""} onChange={(e) => setDraft({ ...draft, category: e.target.value })} placeholder="prompting · agents · vision …" /></R>
+              <R label="Päivämäärä"><Input type="date" value={draft.experiment_date || ""} onChange={(e) => setDraft({ ...draft, experiment_date: e.target.value })} /></R>
+              <R label="Kategoria"><Input value={draft.category || ""} onChange={(e) => setDraft({ ...draft, category: e.target.value })} placeholder="kehotteet · agentit · konenäkö …" /></R>
             </div>
-            <R label="Title"><Input value={draft.title || ""} onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></R>
+            <R label="Otsikko"><Input value={draft.title || ""} onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></R>
             <div className="grid grid-cols-3 gap-3">
-              <R label="Difficulty 1-10"><Input type="number" min={1} max={10} value={draft.difficulty || 5} onChange={(e) => setDraft({ ...draft, difficulty: Number(e.target.value) })} /></R>
-              <R label="Est. time (min)"><Input type="number" min={0} value={draft.estimated_time_minutes ?? ""} onChange={(e) => setDraft({ ...draft, estimated_time_minutes: e.target.value === "" ? null : Number(e.target.value) })} /></R>
-              <R label="Status">
+              <R label="Vaikeustaso 1-10"><Input type="number" min={1} max={10} value={draft.difficulty || 5} onChange={(e) => setDraft({ ...draft, difficulty: Number(e.target.value) })} /></R>
+              <R label="Arvioitu aika (min)"><Input type="number" min={0} value={draft.estimated_time_minutes ?? ""} onChange={(e) => setDraft({ ...draft, estimated_time_minutes: e.target.value === "" ? null : Number(e.target.value) })} /></R>
+              <R label="Tila">
                 <Select value={draft.status} onValueChange={(v) => setDraft({ ...draft, status: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="planned">Planned</SelectItem>
-                    <SelectItem value="in_progress">In progress</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="skipped">Skipped</SelectItem>
+                    <SelectItem value="planned">Suunniteltu</SelectItem>
+                    <SelectItem value="in_progress">Kesken</SelectItem>
+                    <SelectItem value="completed">Valmis</SelectItem>
+                    <SelectItem value="skipped">Ohitettu</SelectItem>
                   </SelectContent>
                 </Select>
               </R>
             </div>
-            <R label="Tools needed (csv)"><Input value={arrayToCsv(draft.tools_needed)} onChange={(e) => setDraft({ ...draft, tools_needed: csvToArray(e.target.value) })} /></R>
-            <R label="Background context"><Textarea rows={2} value={draft.background_context || ""} onChange={(e) => setDraft({ ...draft, background_context: e.target.value })} /></R>
-            <R label="Task description"><Textarea rows={2} value={draft.task_description || ""} onChange={(e) => setDraft({ ...draft, task_description: e.target.value })} /></R>
-            <R label="Step-by-step instructions"><Textarea rows={4} value={draft.step_by_step_instructions || ""} onChange={(e) => setDraft({ ...draft, step_by_step_instructions: e.target.value })} /></R>
-            <R label="Success criteria"><Textarea rows={2} value={draft.success_criteria || ""} onChange={(e) => setDraft({ ...draft, success_criteria: e.target.value })} /></R>
+            <R label="Tarvittavat työkalut (pilkulla)"><Input value={arrayToCsv(draft.tools_needed)} onChange={(e) => setDraft({ ...draft, tools_needed: csvToArray(e.target.value) })} /></R>
+            <R label="Taustakonteksti"><Textarea rows={2} value={draft.background_context || ""} onChange={(e) => setDraft({ ...draft, background_context: e.target.value })} /></R>
+            <R label="Tehtävän kuvaus"><Textarea rows={2} value={draft.task_description || ""} onChange={(e) => setDraft({ ...draft, task_description: e.target.value })} /></R>
+            <R label="Vaiheittaiset ohjeet"><Textarea rows={4} value={draft.step_by_step_instructions || ""} onChange={(e) => setDraft({ ...draft, step_by_step_instructions: e.target.value })} /></R>
+            <R label="Onnistumiskriteerit"><Textarea rows={2} value={draft.success_criteria || ""} onChange={(e) => setDraft({ ...draft, success_criteria: e.target.value })} /></R>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => upsert.mutate(draft, { onSuccess: () => setOpen(false) })} disabled={!draft.title || upsert.isPending}>Create</Button>
+            <Button variant="ghost" onClick={() => setOpen(false)}>Peruuta</Button>
+            <Button onClick={() => upsert.mutate(draft, { onSuccess: () => setOpen(false) })} disabled={!draft.title || upsert.isPending}>Luo</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -237,7 +237,7 @@ function MonthCalendar({ items }: { items: any[] }) {
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
   const firstDay = new Date(year, month, 1);
-  const startWeekday = (firstDay.getDay() + 6) % 7; // Mon=0
+  const startWeekday = (firstDay.getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   const byDate = useMemo(() => {
@@ -252,7 +252,7 @@ function MonthCalendar({ items }: { items: any[] }) {
   while (cells.length % 7 !== 0) cells.push(null);
 
   const todayKey = new Date().toISOString().slice(0, 10);
-  const monthLabel = cursor.toLocaleString(undefined, { month: "long", year: "numeric" });
+  const monthLabel = cursor.toLocaleString("fi-FI", { month: "long", year: "numeric" });
 
   return (
     <div className="surface-card p-5">
@@ -260,12 +260,12 @@ function MonthCalendar({ items }: { items: any[] }) {
         <h3 className="font-display text-lg font-semibold">{monthLabel}</h3>
         <div className="flex gap-1">
           <Button variant="ghost" size="sm" onClick={() => setCursor(new Date(year, month - 1, 1))}>‹</Button>
-          <Button variant="ghost" size="sm" onClick={() => setCursor(new Date())}>Today</Button>
+          <Button variant="ghost" size="sm" onClick={() => setCursor(new Date())}>Tänään</Button>
           <Button variant="ghost" size="sm" onClick={() => setCursor(new Date(year, month + 1, 1))}>›</Button>
         </div>
       </div>
       <div className="grid grid-cols-7 gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground mb-2">
-        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => <div key={d} className="px-1">{d}</div>)}
+        {["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"].map((d) => <div key={d} className="px-1">{d}</div>)}
       </div>
       <div className="grid grid-cols-7 gap-1.5">
         {cells.map((d, i) => {
@@ -282,7 +282,7 @@ function MonthCalendar({ items }: { items: any[] }) {
                     {e.title}
                   </Link>
                 ))}
-                {dayItems.length > 2 && <div className="text-[9px] text-muted-foreground">+{dayItems.length - 2} more</div>}
+                {dayItems.length > 2 && <div className="text-[9px] text-muted-foreground">+{dayItems.length - 2} lisää</div>}
               </div>
             </div>
           );

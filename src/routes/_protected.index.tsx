@@ -27,7 +27,7 @@ import { useUpsert } from "@/lib/mutations";
 export const Route = createFileRoute("/_protected/")({
   component: Dashboard,
   errorComponent: ({ error }) => <div className="p-4 text-destructive">{error.message}</div>,
-  notFoundComponent: () => <div className="p-4">Not found</div>,
+  notFoundComponent: () => <div className="p-4">Ei löytynyt</div>,
 });
 
 function Dashboard() {
@@ -62,33 +62,33 @@ function Dashboard() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title={`Welcome back, ${profile?.display_name || "Operator"}`}
-        description="Your AI command center · status nominal · today's mission below"
+        title={`Tervetuloa takaisin, ${profile?.display_name || "Operaattori"}`}
+        description="Sinun AI-ohjauskeskuksesi · järjestelmät kunnossa · päivän tehtävä alla"
       />
 
-      {/* TODAY'S MISSION + AI BRIEFING */}
+      {/* PÄIVÄN TEHTÄVÄ + AI-BRIEFING */}
       <div className="grid gap-4 lg:grid-cols-3">
         <MissionCard exp={todayExp} onStart={() => todayExp && upsertExp.mutate({ ...todayExp, status: "in_progress" })} onComplete={() => todayExp && upsertExp.mutate({ ...todayExp, status: "completed" })} pending={upsertExp.isPending} />
         <BriefingCard brief={todayBrief} />
       </div>
 
-      {/* LEARNING PROGRESS */}
+      {/* OPPIMISEN KEHITYS */}
       <section>
-        <SectionHeader icon={Trophy} label="Learning progress" />
+        <SectionHeader icon={Trophy} label="Oppimisen kehitys" />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          <StatCard label="Total score" value={profile?.learning_score ?? 0} icon={Trophy} tone="primary" />
-          <StatCard label="This week" value={`+${weeklyScore}`} icon={TrendingUp} tone="accent" hint="last 7 days" />
-          <StatCard label="Experiments" value={completed.length} icon={FlaskConical} tone="success" hint="completed" />
-          <StatCard label="Avg score" value={avgScore} icon={Activity} tone="primary" hint="across runs" />
-          <StatCard label="Streak" value={`${profile?.weekly_streak ?? 0}d`} icon={Flame} tone="warning" />
+          <StatCard label="Kokonaispisteet" value={profile?.learning_score ?? 0} icon={Trophy} tone="primary" />
+          <StatCard label="Tällä viikolla" value={`+${weeklyScore}`} icon={TrendingUp} tone="accent" hint="viim. 7 päivää" />
+          <StatCard label="AI-kokeet" value={completed.length} icon={FlaskConical} tone="success" hint="valmiita" />
+          <StatCard label="Keskipisteet" value={avgScore} icon={Activity} tone="primary" hint="kaikista koesta" />
+          <StatCard label="Putki" value={`${profile?.weekly_streak ?? 0} pv`} icon={Flame} tone="warning" />
         </div>
       </section>
 
-      {/* AGENT TEAM STATUS */}
+      {/* AGENTTITIIMIN TILA */}
       <section>
-        <SectionHeader icon={Bot} label="Agent team status" right={<Link to="/agents" className="text-xs text-primary inline-flex items-center gap-1">View all <ArrowRight className="h-3 w-3" /></Link>} />
+        <SectionHeader icon={Bot} label="Agenttitiimin tila" right={<Link to="/agents" className="text-xs text-primary inline-flex items-center gap-1">Näytä kaikki <ArrowRight className="h-3 w-3" /></Link>} />
         {agents.length === 0 ? (
-          <div className="surface-card p-6 text-sm text-muted-foreground">No agents deployed yet.</div>
+          <div className="surface-card p-6 text-sm text-muted-foreground">Ei agentteja vielä käytössä.</div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {agents.slice(0, 8).map((a: any) => (
@@ -111,11 +111,11 @@ function Dashboard() {
                 </div>
                 <div className="mt-3 flex items-end justify-between text-xs">
                   <div className="text-muted-foreground">
-                    <div>Last run</div>
-                    <div className="text-foreground">{a.last_run_at ? new Date(a.last_run_at).toLocaleDateString() : "never"}</div>
+                    <div>Edellinen suoritus</div>
+                    <div className="text-foreground">{a.last_run_at ? new Date(a.last_run_at).toLocaleDateString("fi-FI") : "ei koskaan"}</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-muted-foreground">Success</div>
+                    <div className="text-muted-foreground">Onnistuminen</div>
                     <div className="font-display text-base font-bold text-primary">{Math.round(Number(a.success_rate || 0))}%</div>
                   </div>
                 </div>
@@ -125,11 +125,11 @@ function Dashboard() {
         )}
       </section>
 
-      {/* RECENT ACTIVITY + NEXT BEST ACTIONS */}
+      {/* VIIMEISIN TOIMINTA + SEURAAVAT PARHAAT ASKELEET */}
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2 grid gap-4 sm:grid-cols-2">
           <RecentList
-            title="Experiments"
+            title="AI-kokeet"
             icon={<FlaskConical className="h-4 w-4 text-muted-foreground" />}
             rows={experiments.slice(0, 5).map((e: any) => ({
               id: e.id,
@@ -139,26 +139,26 @@ function Dashboard() {
             }))}
           />
           <RecentList
-            title="Journal entries"
+            title="Päiväkirjamerkinnät"
             icon={<BookOpen className="h-4 w-4 text-muted-foreground" />}
             rows={journal.slice(0, 5).map((j: any) => ({
               id: j.id,
-              title: j.what_i_learned?.slice(0, 80) || j.what_i_built?.slice(0, 80) || "(entry)",
+              title: j.what_i_learned?.slice(0, 80) || j.what_i_built?.slice(0, 80) || "(merkintä)",
               meta: `${j.entry_date || ""} · ${j.mood || ""}`,
               to: "/journal",
             }))}
           />
           <RecentList
-            title="AI news"
+            title="AI-uutiset"
             icon={<Newspaper className="h-4 w-4 text-muted-foreground" />}
             rows={news.slice(0, 5).map((n: any) => ({ id: n.id, title: n.title, meta: n.source, href: n.url }))}
           />
           <RecentList
-            title="Social insights"
+            title="Somehavainnot"
             icon={<Zap className="h-4 w-4 text-muted-foreground" />}
             rows={social.slice(0, 5).map((s: any) => ({
               id: s.id,
-              title: s.topic || s.summary?.slice(0, 60) || "(insight)",
+              title: s.topic || s.summary?.slice(0, 60) || "(havainto)",
               meta: s.platform,
               href: s.post_url,
             }))}
@@ -191,7 +191,7 @@ function MissionCard({ exp, onStart, onComplete, pending }: { exp: any; onStart:
       <div className="relative">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-primary">
-            <Sparkles className="h-3.5 w-3.5" /> Today's mission
+            <Sparkles className="h-3.5 w-3.5" /> Päivän tehtävä
           </div>
           {exp && <StatusBadge status={exp.status} />}
         </div>
@@ -206,14 +206,14 @@ function MissionCard({ exp, onStart, onComplete, pending }: { exp: any; onStart:
             )}
 
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              <Metric icon={Target} label="Difficulty" value={`${exp.difficulty ?? "—"}/10`} />
-              <Metric icon={Clock} label="Est. time" value={exp.estimated_time_minutes ? `${exp.estimated_time_minutes} min` : "—"} />
-              <Metric icon={FlaskConical} label="Category" value={exp.category || "—"} />
+              <Metric icon={Target} label="Vaikeustaso" value={`${exp.difficulty ?? "—"}/10`} />
+              <Metric icon={Clock} label="Arvioitu aika" value={exp.estimated_time_minutes ? `${exp.estimated_time_minutes} min` : "—"} />
+              <Metric icon={FlaskConical} label="Kategoria" value={exp.category || "—"} />
             </div>
 
             {exp.tools_needed?.length > 0 && (
               <div className="mt-3">
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Tools needed</div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Tarvittavat työkalut</div>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
                   {exp.tools_needed.map((t: string) => <Chip key={t}>{t}</Chip>)}
                 </div>
@@ -222,20 +222,20 @@ function MissionCard({ exp, onStart, onComplete, pending }: { exp: any; onStart:
 
             <div className="mt-5 flex flex-wrap gap-2">
               <Button onClick={onStart} disabled={pending || exp.status === "in_progress" || exp.status === "completed"}>
-                <Play className="h-4 w-4 mr-1" /> Start
+                <Play className="h-4 w-4 mr-1" /> Aloita
               </Button>
               <Button onClick={onComplete} disabled={pending || exp.status === "completed"} variant="secondary">
-                <CheckCircle2 className="h-4 w-4 mr-1" /> Complete
+                <CheckCircle2 className="h-4 w-4 mr-1" /> Merkitse valmiiksi
               </Button>
               <Button asChild variant="ghost" className="ml-auto">
-                <Link to="/experiments/$id" params={{ id: exp.id }}>Open <ArrowRight className="h-4 w-4 ml-1" /></Link>
+                <Link to="/experiments/$id" params={{ id: exp.id }}>Avaa <ArrowRight className="h-4 w-4 ml-1" /></Link>
               </Button>
             </div>
           </>
         ) : (
           <div className="mt-4">
-            <p className="text-sm text-muted-foreground">No experiment queued for today.</p>
-            <Button asChild className="mt-3"><Link to="/experiments">Plan one</Link></Button>
+            <p className="text-sm text-muted-foreground">Päivälle ei ole vielä jonotettu koetta.</p>
+            <Button asChild className="mt-3"><Link to="/experiments">Suunnittele yksi</Link></Button>
           </div>
         )}
       </div>
@@ -259,7 +259,7 @@ function BriefingCard({ brief }: { brief: any }) {
     <div className="surface-card p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-accent">
-          <Newspaper className="h-3.5 w-3.5" /> 5-min briefing
+          <Newspaper className="h-3.5 w-3.5" /> 5 minuutin AI-briefing
         </div>
         {brief?.briefing_date && (
           <span className="text-[10px] text-muted-foreground">{brief.briefing_date}</span>
@@ -275,7 +275,7 @@ function BriefingCard({ brief }: { brief: any }) {
 
           {brief.hot_topics?.length > 0 && (
             <div className="mt-3">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Hot topics</div>
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Kuumat aiheet</div>
               <div className="mt-1.5 flex flex-wrap gap-1.5">
                 {brief.hot_topics.slice(0, 5).map((t: string) => <Chip key={t}>🔥 {t}</Chip>)}
               </div>
@@ -284,7 +284,7 @@ function BriefingCard({ brief }: { brief: any }) {
 
           {Array.isArray(brief.recommended_articles) && brief.recommended_articles.length > 0 && (
             <div className="mt-3">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Recommended</div>
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Suositellut artikkelit</div>
               <ul className="mt-1.5 space-y-1">
                 {brief.recommended_articles.slice(0, 3).map((a: any, i: number) => (
                   <li key={i} className="text-xs">
@@ -303,17 +303,17 @@ function BriefingCard({ brief }: { brief: any }) {
 
           {brief.why_it_matters && (
             <div className="mt-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
-              <div className="text-[10px] uppercase tracking-wider text-primary">Why it matters</div>
+              <div className="text-[10px] uppercase tracking-wider text-primary">Miksi tämä on tärkeää</div>
               <p className="mt-1 text-xs text-foreground/90 line-clamp-3">{brief.why_it_matters}</p>
             </div>
           )}
 
           <Button asChild variant="ghost" size="sm" className="mt-4 w-full">
-            <Link to="/briefings/$id" params={{ id: brief.id }}>Read full briefing <ArrowRight className="h-4 w-4 ml-1" /></Link>
+            <Link to="/briefings/$id" params={{ id: brief.id }}>Lue koko briefing <ArrowRight className="h-4 w-4 ml-1" /></Link>
           </Button>
         </>
       ) : (
-        <p className="mt-3 text-sm text-muted-foreground">No briefing for today yet. n8n hasn't delivered one.</p>
+        <p className="mt-3 text-sm text-muted-foreground">Päivän briefingiä ei ole vielä saatu. n8n ei ole vielä toimittanut sitä.</p>
       )}
     </div>
   );
@@ -335,7 +335,7 @@ function RecentList({
         {icon}
       </div>
       <ul className="space-y-2">
-        {rows.length === 0 && <li className="text-sm text-muted-foreground">Nothing yet.</li>}
+        {rows.length === 0 && <li className="text-sm text-muted-foreground">Ei vielä mitään.</li>}
         {rows.map((r) => {
           const content = (
             <>
@@ -362,16 +362,16 @@ function RecentList({
 
 function NextBestActions() {
   const actions = [
-    { label: "Complete today's experiment", to: "/experiments", icon: FlaskConical },
-    { label: "Review yesterday's learning", to: "/journal", icon: BookOpen },
-    { label: "Add one project update", to: "/projects", icon: Target },
-    { label: "Check new AI trends", to: "/news", icon: TrendingUp },
+    { label: "Tee päivän AI-koe", to: "/experiments", icon: FlaskConical },
+    { label: "Käy läpi eilisen oppiminen", to: "/journal", icon: BookOpen },
+    { label: "Päivitä yksi projekti", to: "/projects", icon: Target },
+    { label: "Tarkista uudet AI-trendit", to: "/news", icon: TrendingUp },
   ];
   return (
     <div className="surface-card p-5">
       <div className="mb-3 flex items-center gap-2">
         <Sparkles className="h-4 w-4 text-accent" />
-        <h3 className="font-display text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Next best actions</h3>
+        <h3 className="font-display text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Seuraavat parhaat askeleet</h3>
       </div>
       <ul className="space-y-2">
         {actions.map((a, i) => (
@@ -392,7 +392,7 @@ function NextBestActions() {
       </ul>
       <div className="mt-4 flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs text-muted-foreground">
         <ScoreRing value={70} size={36} />
-        <span>You're on track. Keep shipping.</span>
+        <span>Olet hyvällä kurssilla. Jatka rakentamista.</span>
       </div>
     </div>
   );

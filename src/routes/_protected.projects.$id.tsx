@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export const Route = createFileRoute("/_protected/projects/$id")({
   component: ProjectDetail,
   errorComponent: ({ error }) => <div className="p-4 text-destructive">{error.message}</div>,
-  notFoundComponent: () => <div className="p-4">Not found</div>,
+  notFoundComponent: () => <div className="p-4">Ei löytynyt</div>,
 });
 
 function ProjectDetail() {
@@ -25,19 +25,19 @@ function ProjectDetail() {
   const nav = useNavigate();
   const [f, setF] = useState<any>(p);
   useEffect(() => setF(p), [p?.id]);
-  if (!p) return <div className="p-4">Not found</div>;
+  if (!p) return <div className="p-4">Ei löytynyt</div>;
   const v = f ?? p;
 
   return (
     <div className="space-y-6">
-      <Button asChild variant="ghost" size="sm"><Link to="/projects"><ArrowLeft className="h-4 w-4 mr-1" /> Projects</Link></Button>
+      <Button asChild variant="ghost" size="sm"><Link to="/projects"><ArrowLeft className="h-4 w-4 mr-1" /> Projektit</Link></Button>
       <PageHeader
         title={v.name}
         description={v.description}
         actions={
           <>
             <Button variant="destructive" size="sm" onClick={() => del.mutate(p.id, { onSuccess: () => nav({ to: "/projects" }) })}><Trash2 className="h-4 w-4" /></Button>
-            <Button onClick={() => upsert.mutate(v)}><Save className="h-4 w-4 mr-1" />Save</Button>
+            <Button onClick={() => upsert.mutate(v)}><Save className="h-4 w-4 mr-1" />Tallenna</Button>
           </>
         }
       />
@@ -49,28 +49,28 @@ function ProjectDetail() {
           {v.demo_url && <a className="inline-flex items-center gap-1 text-xs text-primary" href={v.demo_url} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3" />Demo</a>}
         </div>
         <div className="grid sm:grid-cols-2 gap-4">
-          <F label="Name"><Input value={v.name || ""} onChange={(e) => setF({ ...v, name: e.target.value })} /></F>
-          <F label="Status">
+          <F label="Nimi"><Input value={v.name || ""} onChange={(e) => setF({ ...v, name: e.target.value })} /></F>
+          <F label="Tila">
             <Select value={v.status} onValueChange={(x) => setF({ ...v, status: x })}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="paused">Paused</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="archived">Archived</SelectItem>
+                <SelectItem value="active">Aktiivinen</SelectItem>
+                <SelectItem value="paused">Tauolla</SelectItem>
+                <SelectItem value="completed">Valmis</SelectItem>
+                <SelectItem value="archived">Arkistoitu</SelectItem>
               </SelectContent>
             </Select>
           </F>
-          <F label="GitHub URL"><Input value={v.github_url || ""} onChange={(e) => setF({ ...v, github_url: e.target.value })} /></F>
-          <F label="Demo URL"><Input value={v.demo_url || ""} onChange={(e) => setF({ ...v, demo_url: e.target.value })} /></F>
+          <F label="GitHub-osoite"><Input value={v.github_url || ""} onChange={(e) => setF({ ...v, github_url: e.target.value })} /></F>
+          <F label="Demo-osoite"><Input value={v.demo_url || ""} onChange={(e) => setF({ ...v, demo_url: e.target.value })} /></F>
         </div>
-        <F label="Description"><Textarea rows={3} value={v.description || ""} onChange={(e) => setF({ ...v, description: e.target.value })} /></F>
-        <F label="Problem it solves"><Textarea rows={3} value={v.problem_solved || ""} onChange={(e) => setF({ ...v, problem_solved: e.target.value })} /></F>
-        <F label="Tools (csv)"><Input value={arrayToCsv(v.tools_used)} onChange={(e) => setF({ ...v, tools_used: csvToArray(e.target.value) })} /></F>
+        <F label="Kuvaus"><Textarea rows={3} value={v.description || ""} onChange={(e) => setF({ ...v, description: e.target.value })} /></F>
+        <F label="Mikä ongelma ratkaistaan"><Textarea rows={3} value={v.problem_solved || ""} onChange={(e) => setF({ ...v, problem_solved: e.target.value })} /></F>
+        <F label="Työkalut (pilkulla)"><Input value={arrayToCsv(v.tools_used)} onChange={(e) => setF({ ...v, tools_used: csvToArray(e.target.value) })} /></F>
         <div className="flex flex-wrap gap-1.5">{(v.tools_used || []).map((t: string) => <Chip key={t}>{t}</Chip>)}</div>
-        <F label="Learnings"><Textarea rows={3} value={v.learnings || ""} onChange={(e) => setF({ ...v, learnings: e.target.value })} /></F>
-        <F label="Next improvements"><Textarea rows={3} value={v.next_improvements || ""} onChange={(e) => setF({ ...v, next_improvements: e.target.value })} /></F>
-        <div className="text-xs text-muted-foreground">Created {new Date(p.created_at).toLocaleString()} · Updated {new Date(p.updated_at).toLocaleString()}</div>
+        <F label="Opitut asiat"><Textarea rows={3} value={v.learnings || ""} onChange={(e) => setF({ ...v, learnings: e.target.value })} /></F>
+        <F label="Seuraavat parannukset"><Textarea rows={3} value={v.next_improvements || ""} onChange={(e) => setF({ ...v, next_improvements: e.target.value })} /></F>
+        <div className="text-xs text-muted-foreground">Luotu {new Date(p.created_at).toLocaleString("fi-FI")} · Päivitetty {new Date(p.updated_at).toLocaleString("fi-FI")}</div>
       </div>
     </div>
   );

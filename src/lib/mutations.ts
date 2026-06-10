@@ -7,7 +7,6 @@ export function useUpsert(table: string) {
   return useMutation({
     mutationFn: async (values: any) => {
       const payload = { ...values };
-      // drop empty strings for nullable fields handled by DB defaults? keep as-is
       let res;
       if (payload.id) {
         const { id, created_at, updated_at, ...rest } = payload;
@@ -21,9 +20,9 @@ export function useUpsert(table: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [table] });
-      toast.success("Saved");
+      toast.success("Tallennettu");
     },
-    onError: (e: any) => toast.error(e.message || "Save failed"),
+    onError: (e: any) => toast.error(e.message || "Tallennus epäonnistui"),
   });
 }
 
@@ -36,9 +35,9 @@ export function useDelete(table: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [table] });
-      toast.success("Deleted");
+      toast.success("Poistettu");
     },
-    onError: (e: any) => toast.error(e.message || "Delete failed"),
+    onError: (e: any) => toast.error(e.message || "Poisto epäonnistui"),
   });
 }
 

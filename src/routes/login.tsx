@@ -21,22 +21,22 @@ function LoginPage() {
     e.preventDefault();
     const result = login(email, password, accessKey);
     if (result.ok) {
-      toast.success("Welcome back");
+      toast.success("Tervetuloa takaisin");
       navigate({ to: "/" });
       return;
     }
     switch (result.reason) {
       case "email":
-        toast.error("Access denied. This app is restricted to the owner.");
+        toast.error("Pääsy estetty. Sovellus on rajattu vain omistajalle.");
         break;
       case "key":
-        toast.error("Invalid private access key.");
+        toast.error("Virheellinen yksityinen pääsyavain.");
         break;
       case "password":
-        toast.error("Invalid password.");
+        toast.error("Virheellinen salasana.");
         break;
       case "config":
-        toast.error("Auth not configured. Set VITE_ALLOWED_USER_EMAIL, VITE_APP_PASSWORD and VITE_APP_ACCESS_KEY.");
+        toast.error("Tunnistautumista ei ole määritetty. Aseta VITE_ALLOWED_USER_EMAIL, VITE_APP_PASSWORD ja VITE_APP_ACCESS_KEY.");
         break;
     }
   }
@@ -55,26 +55,26 @@ function LoginPage() {
             <Sparkles className="h-6 w-6 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gradient">Private AI Growth OS</h1>
-            <p className="text-xs text-muted-foreground">Access restricted to the owner only.</p>
+            <h1 className="text-2xl font-bold text-gradient">Yksityinen AI Growth OS</h1>
+            <p className="text-xs text-muted-foreground">Pääsy rajattu vain omistajalle.</p>
           </div>
         </div>
 
         <div className="flex items-start gap-2 rounded-md border border-border/60 bg-muted/30 p-3 text-xs text-muted-foreground">
           <ShieldCheck className="h-4 w-4 text-primary mt-0.5 shrink-0" />
           <span>
-            Registration is disabled. Only <span className="text-foreground font-medium">{allowed || "the owner"}</span> can sign in.
+            Rekisteröinti on poistettu käytöstä. Vain <span className="text-foreground font-medium">{allowed || "omistaja"}</span> voi kirjautua sisään.
           </span>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Sähköposti</Label>
           <Input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            placeholder="sinun@osoite.fi"
             autoComplete="email"
             autoFocus
             required
@@ -82,7 +82,7 @@ function LoginPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Salasana</Label>
           <Input
             id="password"
             type="password"
@@ -95,28 +95,28 @@ function LoginPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="accessKey">Private access key</Label>
+          <Label htmlFor="accessKey">Yksityinen pääsyavain</Label>
           <Input
             id="accessKey"
             type="password"
             value={accessKey}
             onChange={(e) => setAccessKey(e.target.value)}
-            placeholder="Paste private access key"
+            placeholder="Liitä yksityinen pääsyavain"
             autoComplete="off"
             required
           />
           <p className="text-[11px] text-muted-foreground flex items-center gap-1.5">
             <Lock className="h-3 w-3" />
-            Stored in <code className="font-mono">VITE_APP_ACCESS_KEY</code>. Never share it.
+            Tallennettu ympäristömuuttujaan <code className="font-mono">VITE_APP_ACCESS_KEY</code>. Älä jaa sitä koskaan.
           </p>
         </div>
 
         <Button type="submit" className="w-full" size="lg">
-          Enter command center
+          Siirry ohjauskeskukseen
         </Button>
 
         <p className="text-center text-[11px] text-muted-foreground">
-          This is a private one-user system. Public sign-up is disabled.
+          Tämä on yksityinen yhden käyttäjän järjestelmä. Julkinen rekisteröinti on poistettu käytöstä.
         </p>
       </form>
     </div>
