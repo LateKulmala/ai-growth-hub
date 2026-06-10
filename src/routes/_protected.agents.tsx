@@ -48,9 +48,9 @@ function AgentsPage() {
                 <span>· Success {Math.round((a.success_rate || 0) * 100)}%</span>
               </div>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                {(a.tools || []).slice(0, 4).map((t: string) => <Chip key={t}>{t}</Chip>)}
+                {(a.tools_used || []).slice(0, 4).map((t: string) => <Chip key={t}>{t}</Chip>)}
               </div>
-              {a.n8n_url && <a className="mt-3 inline-flex items-center gap-1 text-xs text-primary" href={a.n8n_url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}><ExternalLink className="h-3 w-3" />Workflow</a>}
+              {a.n8n_workflow_url && <a className="mt-3 inline-flex items-center gap-1 text-xs text-primary" href={a.n8n_workflow_url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}><ExternalLink className="h-3 w-3" />Workflow</a>}
             </Link>
           ))}
         </div>
@@ -87,10 +87,10 @@ function AgentsPage() {
                 </Select>
               </R>
             </div>
-            <R label="Input"><Textarea rows={2} value={draft.input || ""} onChange={(e) => setDraft({ ...draft, input: e.target.value })} /></R>
-            <R label="Output"><Textarea rows={2} value={draft.output || ""} onChange={(e) => setDraft({ ...draft, output: e.target.value })} /></R>
-            <R label="Tools (csv)"><Input value={arrayToCsv(draft.tools)} onChange={(e) => setDraft({ ...draft, tools: csvToArray(e.target.value) })} /></R>
-            <R label="n8n workflow URL"><Input value={draft.n8n_url || ""} onChange={(e) => setDraft({ ...draft, n8n_url: e.target.value })} /></R>
+            <R label="Input"><Textarea rows={2} value={draft.input_description || ""} onChange={(e) => setDraft({ ...draft, input: e.target.value })} /></R>
+            <R label="Output"><Textarea rows={2} value={draft.output_description || ""} onChange={(e) => setDraft({ ...draft, output: e.target.value })} /></R>
+            <R label="Tools (csv)"><Input value={arrayToCsv(draft.tools_used)} onChange={(e) => setDraft({ ...draft, tools_used: csvToArray(e.target.value) })} /></R>
+            <R label="n8n workflow URL"><Input value={draft.n8n_workflow_url || ""} onChange={(e) => setDraft({ ...draft, n8n_workflow_url: e.target.value })} /></R>
             <R label="Notes"><Textarea rows={2} value={draft.notes || ""} onChange={(e) => setDraft({ ...draft, notes: e.target.value })} /></R>
             <R label="Improvement ideas"><Textarea rows={2} value={draft.improvement_ideas || ""} onChange={(e) => setDraft({ ...draft, improvement_ideas: e.target.value })} /></R>
           </div>

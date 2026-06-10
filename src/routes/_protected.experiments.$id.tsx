@@ -46,7 +46,7 @@ function ExperimentDetail() {
           </div>
           <F label="Title"><Input value={v.title || ""} onChange={(x) => setF({ ...v, title: x.target.value })} /></F>
           <div className="grid grid-cols-2 gap-3">
-            <F label="Estimated time"><Input value={v.estimated_time || ""} onChange={(x) => setF({ ...v, estimated_time: x.target.value })} /></F>
+            <F label="Estimated time"><Input value={v.estimated_time_minutes || ""} onChange={(x) => setF({ ...v, estimated_time_minutes: x.target.value })} /></F>
             <F label="Status">
               <Select value={v.status} onValueChange={(x) => setF({ ...v, status: x })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
@@ -62,29 +62,29 @@ function ExperimentDetail() {
           <F label="Tools (csv)"><Input value={arrayToCsv(v.tools_needed)} onChange={(x) => setF({ ...v, tools_needed: csvToArray(x.target.value) })} /></F>
           <div className="flex flex-wrap gap-1.5">{(v.tools_needed || []).map((t: string) => <Chip key={t}>{t}</Chip>)}</div>
 
-          <F label="Background"><Textarea rows={3} value={v.background || ""} onChange={(x) => setF({ ...v, background: x.target.value })} /></F>
-          <F label="Task"><Textarea rows={3} value={v.task || ""} onChange={(x) => setF({ ...v, task: x.target.value })} /></F>
-          <F label="Step-by-step instructions"><Textarea rows={5} value={v.instructions || ""} onChange={(x) => setF({ ...v, instructions: x.target.value })} /></F>
+          <F label="Background"><Textarea rows={3} value={v.background_context || ""} onChange={(x) => setF({ ...v, background_context: x.target.value })} /></F>
+          <F label="Task"><Textarea rows={3} value={v.task_description || ""} onChange={(x) => setF({ ...v, task_description: x.target.value })} /></F>
+          <F label="Step-by-step instructions"><Textarea rows={5} value={v.step_by_step_instructions || ""} onChange={(x) => setF({ ...v, step_by_step_instructions: x.target.value })} /></F>
           <F label="Success criteria"><Textarea rows={2} value={v.success_criteria || ""} onChange={(x) => setF({ ...v, success_criteria: x.target.value })} /></F>
         </div>
 
         <div className="space-y-4">
           <div className="surface-card p-6 flex items-center gap-4">
-            <ScoreRing value={v.score ?? 0} size={84} />
+            <ScoreRing value={v.score_total ?? 0} size={84} />
             <div>
               <div className="text-xs uppercase tracking-wider text-muted-foreground">Score</div>
               <StatusBadge status={v.status} />
             </div>
           </div>
           <div className="surface-card p-6 space-y-3">
-            <F label="Score (0-100)"><Input type="number" min={0} max={100} value={v.score ?? ""} onChange={(x) => setF({ ...v, score: x.target.value === "" ? null : Number(x.target.value) })} /></F>
+            <F label="Score (0-100)"><Input type="number" min={0} max={100} value={v.score_total ?? ""} onChange={(x) => setF({ ...v, score_total: x.target.value === "" ? null : Number(x.target.value) })} /></F>
             <F label="Result URL"><Input value={v.result_url || ""} onChange={(x) => setF({ ...v, result_url: x.target.value })} /></F>
             {v.result_url && <a className="inline-flex items-center gap-1 text-xs text-primary" href={v.result_url} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3" />Open result</a>}
             <F label="Result summary"><Textarea rows={3} value={v.result_summary || ""} onChange={(x) => setF({ ...v, result_summary: x.target.value })} /></F>
             <F label="Self reflection"><Textarea rows={3} value={v.self_reflection || ""} onChange={(x) => setF({ ...v, self_reflection: x.target.value })} /></F>
             <F label="AI feedback"><Textarea rows={3} value={v.ai_feedback || ""} onChange={(x) => setF({ ...v, ai_feedback: x.target.value })} /></F>
-            <F label="What I learned"><Textarea rows={2} value={v.learnings || ""} onChange={(x) => setF({ ...v, learnings: x.target.value })} /></F>
-            <F label="Next experiment idea"><Textarea rows={2} value={v.next_idea || ""} onChange={(x) => setF({ ...v, next_idea: x.target.value })} /></F>
+            <F label="What I learned"><Textarea rows={2} value={v.what_i_learned || ""} onChange={(x) => setF({ ...v, what_i_learned: x.target.value })} /></F>
+            <F label="Next experiment idea"><Textarea rows={2} value={v.next_experiment_idea || ""} onChange={(x) => setF({ ...v, next_experiment_idea: x.target.value })} /></F>
           </div>
         </div>
       </div>
