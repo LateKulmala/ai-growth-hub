@@ -65,7 +65,7 @@ function ProjectDetail() {
           <F label="Demo URL"><Input value={v.demo_url || ""} onChange={(e) => setF({ ...v, demo_url: e.target.value })} /></F>
         </div>
         <F label="Description"><Textarea rows={3} value={v.description || ""} onChange={(e) => setF({ ...v, description: e.target.value })} /></F>
-        <F label="Problem it solves"><Textarea rows={3} value={v.problem || ""} onChange={(e) => setF({ ...v, problem: e.target.value })} /></F>
+        <F label="Problem it solves"><Textarea rows={3} value={v.problem_solved || ""} onChange={(e) => setF({ ...v, problem_solved: e.target.value })} /></F>
         <F label="Tools (csv)"><Input value={arrayToCsv(v.tools)} onChange={(e) => setF({ ...v, tools: csvToArray(e.target.value) })} /></F>
         <div className="flex flex-wrap gap-1.5">{(v.tools || []).map((t: string) => <Chip key={t}>{t}</Chip>)}</div>
         <F label="Learnings"><Textarea rows={3} value={v.learnings || ""} onChange={(e) => setF({ ...v, learnings: e.target.value })} /></F>

@@ -70,7 +70,7 @@ function ProjectsPage() {
           <div className="space-y-3">
             <Row label="Name"><Input value={draft.name || ""} onChange={(e) => setDraft({ ...draft, name: e.target.value })} /></Row>
             <Row label="Description"><Textarea rows={2} value={draft.description || ""} onChange={(e) => setDraft({ ...draft, description: e.target.value })} /></Row>
-            <Row label="Problem it solves"><Textarea rows={2} value={draft.problem || ""} onChange={(e) => setDraft({ ...draft, problem: e.target.value })} /></Row>
+            <Row label="Problem it solves"><Textarea rows={2} value={draft.problem_solved || ""} onChange={(e) => setDraft({ ...draft, problem_solved: e.target.value })} /></Row>
             <Row label="Tools (csv)"><Input value={arrayToCsv(draft.tools)} onChange={(e) => setDraft({ ...draft, tools: csvToArray(e.target.value) })} /></Row>
             <div className="grid grid-cols-2 gap-3">
               <Row label="Status">
