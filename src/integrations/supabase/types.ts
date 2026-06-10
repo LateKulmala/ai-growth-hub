@@ -314,6 +314,11 @@ export type Database = {
           next_experiment_idea: string | null
           result_summary: string | null
           result_url: string | null
+          score_creativity: number | null
+          score_documentation: number | null
+          score_learning: number | null
+          score_practical: number | null
+          score_technical: number | null
           score_total: number | null
           self_reflection: string | null
           status: string
@@ -337,6 +342,11 @@ export type Database = {
           next_experiment_idea?: string | null
           result_summary?: string | null
           result_url?: string | null
+          score_creativity?: number | null
+          score_documentation?: number | null
+          score_learning?: number | null
+          score_practical?: number | null
+          score_technical?: number | null
           score_total?: number | null
           self_reflection?: string | null
           status?: string
@@ -360,6 +370,11 @@ export type Database = {
           next_experiment_idea?: string | null
           result_summary?: string | null
           result_url?: string | null
+          score_creativity?: number | null
+          score_documentation?: number | null
+          score_learning?: number | null
+          score_practical?: number | null
+          score_technical?: number | null
           score_total?: number | null
           self_reflection?: string | null
           status?: string
