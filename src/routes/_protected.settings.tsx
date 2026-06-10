@@ -1,7 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Download, Send, Webhook, KeyRound, Save, Bot, Clock, Zap, BookOpen, ListChecks } from "lucide-react";
+import { Download, Send, Webhook, KeyRound, Save, Bot, Clock, Zap, BookOpen, ShieldCheck } from "lucide-react";
+import { getAllowedEmail } from "@/lib/auth";
 import { listQuery } from "@/lib/queries";
 import { useUpsert, arrayToCsv, csvToArray } from "@/lib/mutations";
 import { PageHeader } from "@/components/ui-bits";
@@ -63,6 +64,21 @@ function SettingsPage() {
         description="Profile, integrations, automation, data"
         actions={<Button onClick={save}><Save className="h-4 w-4 mr-1" />Save changes</Button>}
       />
+
+      {/* Private access notice */}
+      <div className="surface-card p-6 space-y-3 border-primary/30">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="h-5 w-5 text-primary" />
+          <h3 className="font-display text-lg font-semibold">Private access</h3>
+        </div>
+        <ul className="text-sm text-muted-foreground space-y-1.5 list-disc pl-5">
+          <li>This is a <span className="text-foreground font-medium">private one-user app</span>. Public registration is disabled.</li>
+          <li>Only <span className="text-foreground font-medium">{getAllowedEmail() || "the configured owner"}</span> can sign in.</li>
+          <li>A private access key is required at login in addition to the password.</li>
+          <li>Keep the access key secret — it is stored only in <code className="font-mono text-xs">VITE_APP_ACCESS_KEY</code>, never in the database.</li>
+          <li>To rotate the key, update <code className="font-mono text-xs">VITE_APP_ACCESS_KEY</code> in your environment and redeploy.</li>
+        </ul>
+      </div>
 
       {/* Profile */}
       <div className="surface-card p-6 space-y-4">
