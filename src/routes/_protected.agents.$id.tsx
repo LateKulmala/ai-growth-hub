@@ -88,7 +88,7 @@ function AgentDetail() {
               <div key={r.id} className="flex items-center justify-between rounded-lg border border-border bg-surface/40 px-3 py-2 text-sm">
                 <div>{new Date(r.started_at).toLocaleString()}</div>
                 <div className="flex items-center gap-3">
-                  {r.duration_seconds != null && <span className="text-xs text-muted-foreground">{r.duration_seconds}ms</span>}
+                  {r.duration_seconds != null && <span className="text-xs text-muted-foreground">{r.duration_seconds}s</span>}
                   <StatusBadge status={r.status} />
                 </div>
               </div>
