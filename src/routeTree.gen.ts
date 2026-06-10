@@ -9,51 +9,443 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ProtectedRouteImport } from './routes/_protected'
+import { Route as ProtectedIndexRouteImport } from './routes/_protected.index'
+import { Route as ProtectedSocialRouteImport } from './routes/_protected.social'
+import { Route as ProtectedSettingsRouteImport } from './routes/_protected.settings'
+import { Route as ProtectedProjectsRouteImport } from './routes/_protected.projects'
+import { Route as ProtectedPortfolioRouteImport } from './routes/_protected.portfolio'
+import { Route as ProtectedNewsRouteImport } from './routes/_protected.news'
+import { Route as ProtectedJournalRouteImport } from './routes/_protected.journal'
+import { Route as ProtectedExperimentsRouteImport } from './routes/_protected.experiments'
+import { Route as ProtectedBriefingsRouteImport } from './routes/_protected.briefings'
+import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected.analytics'
+import { Route as ProtectedAgentsRouteImport } from './routes/_protected.agents'
+import { Route as ProtectedProjectsIdRouteImport } from './routes/_protected.projects.$id'
+import { Route as ProtectedExperimentsIdRouteImport } from './routes/_protected.experiments.$id'
+import { Route as ProtectedBriefingsIdRouteImport } from './routes/_protected.briefings.$id'
+import { Route as ProtectedAgentsIdRouteImport } from './routes/_protected.agents.$id'
 
-const IndexRoute = IndexRouteImport.update({
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedRoute = ProtectedRouteImport.update({
+  id: '/_protected',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedSocialRoute = ProtectedSocialRouteImport.update({
+  id: '/social',
+  path: '/social',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedProjectsRoute = ProtectedProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedPortfolioRoute = ProtectedPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedNewsRoute = ProtectedNewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedJournalRoute = ProtectedJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedExperimentsRoute = ProtectedExperimentsRouteImport.update({
+  id: '/experiments',
+  path: '/experiments',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedBriefingsRoute = ProtectedBriefingsRouteImport.update({
+  id: '/briefings',
+  path: '/briefings',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAnalyticsRoute = ProtectedAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAgentsRoute = ProtectedAgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedProjectsIdRoute = ProtectedProjectsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProtectedProjectsRoute,
+} as any)
+const ProtectedExperimentsIdRoute = ProtectedExperimentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProtectedExperimentsRoute,
+} as any)
+const ProtectedBriefingsIdRoute = ProtectedBriefingsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProtectedBriefingsRoute,
+} as any)
+const ProtectedAgentsIdRoute = ProtectedAgentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProtectedAgentsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof ProtectedIndexRoute
+  '/login': typeof LoginRoute
+  '/agents': typeof ProtectedAgentsRouteWithChildren
+  '/analytics': typeof ProtectedAnalyticsRoute
+  '/briefings': typeof ProtectedBriefingsRouteWithChildren
+  '/experiments': typeof ProtectedExperimentsRouteWithChildren
+  '/journal': typeof ProtectedJournalRoute
+  '/news': typeof ProtectedNewsRoute
+  '/portfolio': typeof ProtectedPortfolioRoute
+  '/projects': typeof ProtectedProjectsRouteWithChildren
+  '/settings': typeof ProtectedSettingsRoute
+  '/social': typeof ProtectedSocialRoute
+  '/agents/$id': typeof ProtectedAgentsIdRoute
+  '/briefings/$id': typeof ProtectedBriefingsIdRoute
+  '/experiments/$id': typeof ProtectedExperimentsIdRoute
+  '/projects/$id': typeof ProtectedProjectsIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/agents': typeof ProtectedAgentsRouteWithChildren
+  '/analytics': typeof ProtectedAnalyticsRoute
+  '/briefings': typeof ProtectedBriefingsRouteWithChildren
+  '/experiments': typeof ProtectedExperimentsRouteWithChildren
+  '/journal': typeof ProtectedJournalRoute
+  '/news': typeof ProtectedNewsRoute
+  '/portfolio': typeof ProtectedPortfolioRoute
+  '/projects': typeof ProtectedProjectsRouteWithChildren
+  '/settings': typeof ProtectedSettingsRoute
+  '/social': typeof ProtectedSocialRoute
+  '/': typeof ProtectedIndexRoute
+  '/agents/$id': typeof ProtectedAgentsIdRoute
+  '/briefings/$id': typeof ProtectedBriefingsIdRoute
+  '/experiments/$id': typeof ProtectedExperimentsIdRoute
+  '/projects/$id': typeof ProtectedProjectsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_protected': typeof ProtectedRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_protected/agents': typeof ProtectedAgentsRouteWithChildren
+  '/_protected/analytics': typeof ProtectedAnalyticsRoute
+  '/_protected/briefings': typeof ProtectedBriefingsRouteWithChildren
+  '/_protected/experiments': typeof ProtectedExperimentsRouteWithChildren
+  '/_protected/journal': typeof ProtectedJournalRoute
+  '/_protected/news': typeof ProtectedNewsRoute
+  '/_protected/portfolio': typeof ProtectedPortfolioRoute
+  '/_protected/projects': typeof ProtectedProjectsRouteWithChildren
+  '/_protected/settings': typeof ProtectedSettingsRoute
+  '/_protected/social': typeof ProtectedSocialRoute
+  '/_protected/': typeof ProtectedIndexRoute
+  '/_protected/agents/$id': typeof ProtectedAgentsIdRoute
+  '/_protected/briefings/$id': typeof ProtectedBriefingsIdRoute
+  '/_protected/experiments/$id': typeof ProtectedExperimentsIdRoute
+  '/_protected/projects/$id': typeof ProtectedProjectsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/agents'
+    | '/analytics'
+    | '/briefings'
+    | '/experiments'
+    | '/journal'
+    | '/news'
+    | '/portfolio'
+    | '/projects'
+    | '/settings'
+    | '/social'
+    | '/agents/$id'
+    | '/briefings/$id'
+    | '/experiments/$id'
+    | '/projects/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/login'
+    | '/agents'
+    | '/analytics'
+    | '/briefings'
+    | '/experiments'
+    | '/journal'
+    | '/news'
+    | '/portfolio'
+    | '/projects'
+    | '/settings'
+    | '/social'
+    | '/'
+    | '/agents/$id'
+    | '/briefings/$id'
+    | '/experiments/$id'
+    | '/projects/$id'
+  id:
+    | '__root__'
+    | '/_protected'
+    | '/login'
+    | '/_protected/agents'
+    | '/_protected/analytics'
+    | '/_protected/briefings'
+    | '/_protected/experiments'
+    | '/_protected/journal'
+    | '/_protected/news'
+    | '/_protected/portfolio'
+    | '/_protected/projects'
+    | '/_protected/settings'
+    | '/_protected/social'
+    | '/_protected/'
+    | '/_protected/agents/$id'
+    | '/_protected/briefings/$id'
+    | '/_protected/experiments/$id'
+    | '/_protected/projects/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  ProtectedRoute: typeof ProtectedRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected/': {
+      id: '/_protected/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof ProtectedIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/social': {
+      id: '/_protected/social'
+      path: '/social'
+      fullPath: '/social'
+      preLoaderRoute: typeof ProtectedSocialRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/settings': {
+      id: '/_protected/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof ProtectedSettingsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/projects': {
+      id: '/_protected/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProtectedProjectsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/portfolio': {
+      id: '/_protected/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof ProtectedPortfolioRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/news': {
+      id: '/_protected/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof ProtectedNewsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/journal': {
+      id: '/_protected/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof ProtectedJournalRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/experiments': {
+      id: '/_protected/experiments'
+      path: '/experiments'
+      fullPath: '/experiments'
+      preLoaderRoute: typeof ProtectedExperimentsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/briefings': {
+      id: '/_protected/briefings'
+      path: '/briefings'
+      fullPath: '/briefings'
+      preLoaderRoute: typeof ProtectedBriefingsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/analytics': {
+      id: '/_protected/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof ProtectedAnalyticsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/agents': {
+      id: '/_protected/agents'
+      path: '/agents'
+      fullPath: '/agents'
+      preLoaderRoute: typeof ProtectedAgentsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/projects/$id': {
+      id: '/_protected/projects/$id'
+      path: '/$id'
+      fullPath: '/projects/$id'
+      preLoaderRoute: typeof ProtectedProjectsIdRouteImport
+      parentRoute: typeof ProtectedProjectsRoute
+    }
+    '/_protected/experiments/$id': {
+      id: '/_protected/experiments/$id'
+      path: '/$id'
+      fullPath: '/experiments/$id'
+      preLoaderRoute: typeof ProtectedExperimentsIdRouteImport
+      parentRoute: typeof ProtectedExperimentsRoute
+    }
+    '/_protected/briefings/$id': {
+      id: '/_protected/briefings/$id'
+      path: '/$id'
+      fullPath: '/briefings/$id'
+      preLoaderRoute: typeof ProtectedBriefingsIdRouteImport
+      parentRoute: typeof ProtectedBriefingsRoute
+    }
+    '/_protected/agents/$id': {
+      id: '/_protected/agents/$id'
+      path: '/$id'
+      fullPath: '/agents/$id'
+      preLoaderRoute: typeof ProtectedAgentsIdRouteImport
+      parentRoute: typeof ProtectedAgentsRoute
     }
   }
 }
 
+interface ProtectedAgentsRouteChildren {
+  ProtectedAgentsIdRoute: typeof ProtectedAgentsIdRoute
+}
+
+const ProtectedAgentsRouteChildren: ProtectedAgentsRouteChildren = {
+  ProtectedAgentsIdRoute: ProtectedAgentsIdRoute,
+}
+
+const ProtectedAgentsRouteWithChildren = ProtectedAgentsRoute._addFileChildren(
+  ProtectedAgentsRouteChildren,
+)
+
+interface ProtectedBriefingsRouteChildren {
+  ProtectedBriefingsIdRoute: typeof ProtectedBriefingsIdRoute
+}
+
+const ProtectedBriefingsRouteChildren: ProtectedBriefingsRouteChildren = {
+  ProtectedBriefingsIdRoute: ProtectedBriefingsIdRoute,
+}
+
+const ProtectedBriefingsRouteWithChildren =
+  ProtectedBriefingsRoute._addFileChildren(ProtectedBriefingsRouteChildren)
+
+interface ProtectedExperimentsRouteChildren {
+  ProtectedExperimentsIdRoute: typeof ProtectedExperimentsIdRoute
+}
+
+const ProtectedExperimentsRouteChildren: ProtectedExperimentsRouteChildren = {
+  ProtectedExperimentsIdRoute: ProtectedExperimentsIdRoute,
+}
+
+const ProtectedExperimentsRouteWithChildren =
+  ProtectedExperimentsRoute._addFileChildren(ProtectedExperimentsRouteChildren)
+
+interface ProtectedProjectsRouteChildren {
+  ProtectedProjectsIdRoute: typeof ProtectedProjectsIdRoute
+}
+
+const ProtectedProjectsRouteChildren: ProtectedProjectsRouteChildren = {
+  ProtectedProjectsIdRoute: ProtectedProjectsIdRoute,
+}
+
+const ProtectedProjectsRouteWithChildren =
+  ProtectedProjectsRoute._addFileChildren(ProtectedProjectsRouteChildren)
+
+interface ProtectedRouteChildren {
+  ProtectedAgentsRoute: typeof ProtectedAgentsRouteWithChildren
+  ProtectedAnalyticsRoute: typeof ProtectedAnalyticsRoute
+  ProtectedBriefingsRoute: typeof ProtectedBriefingsRouteWithChildren
+  ProtectedExperimentsRoute: typeof ProtectedExperimentsRouteWithChildren
+  ProtectedJournalRoute: typeof ProtectedJournalRoute
+  ProtectedNewsRoute: typeof ProtectedNewsRoute
+  ProtectedPortfolioRoute: typeof ProtectedPortfolioRoute
+  ProtectedProjectsRoute: typeof ProtectedProjectsRouteWithChildren
+  ProtectedSettingsRoute: typeof ProtectedSettingsRoute
+  ProtectedSocialRoute: typeof ProtectedSocialRoute
+  ProtectedIndexRoute: typeof ProtectedIndexRoute
+}
+
+const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedAgentsRoute: ProtectedAgentsRouteWithChildren,
+  ProtectedAnalyticsRoute: ProtectedAnalyticsRoute,
+  ProtectedBriefingsRoute: ProtectedBriefingsRouteWithChildren,
+  ProtectedExperimentsRoute: ProtectedExperimentsRouteWithChildren,
+  ProtectedJournalRoute: ProtectedJournalRoute,
+  ProtectedNewsRoute: ProtectedNewsRoute,
+  ProtectedPortfolioRoute: ProtectedPortfolioRoute,
+  ProtectedProjectsRoute: ProtectedProjectsRouteWithChildren,
+  ProtectedSettingsRoute: ProtectedSettingsRoute,
+  ProtectedSocialRoute: ProtectedSocialRoute,
+  ProtectedIndexRoute: ProtectedIndexRoute,
+}
+
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
+  ProtectedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  ProtectedRoute: ProtectedRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
