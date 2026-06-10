@@ -35,7 +35,7 @@ function JournalPage() {
             <div key={j.id} className="surface-card p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-xs text-primary">{j.entry_date} · {j.mood}</div>
+                  <div className="text-xs text-primary">{j.entry_date} · {j.mood}{j.energy_level != null ? ` · energy ${j.energy_level}/10` : ""}</div>
                   <div className="mt-2 grid gap-2 text-sm md:grid-cols-2">
                     {j.what_i_learned && <P label="Learned">{j.what_i_learned}</P>}
                     {j.what_i_built && <P label="Built">{j.what_i_built}</P>}
