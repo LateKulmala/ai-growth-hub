@@ -87,7 +87,7 @@ function ProjectsPage() {
               <Row label="GitHub URL"><Input value={draft.github_url || ""} onChange={(e) => setDraft({ ...draft, github_url: e.target.value })} /></Row>
               <Row label="Demo URL"><Input value={draft.demo_url || ""} onChange={(e) => setDraft({ ...draft, demo_url: e.target.value })} /></Row>
             </div>
-            <Row label="Learnings"><Textarea rows={2} value={draft.learnings_unused || ""} onChange={(e) => setDraft({ ...draft, learnings: e.target.value })} /></Row>
+            <Row label="Learnings"><Textarea rows={2} value={draft.learnings || ""} onChange={(e) => setDraft({ ...draft, learnings: e.target.value })} /></Row>
             <Row label="Next improvements"><Textarea rows={2} value={draft.next_improvements || ""} onChange={(e) => setDraft({ ...draft, next_improvements: e.target.value })} /></Row>
           </div>
           <DialogFooter>

@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_protected/agents/$id")({
 function AgentDetail() {
   const { id } = Route.useParams();
   const a = useSuspenseQuery(rowQuery<any>("agents", id)).data;
-  const runs = useSuspenseQuery(listQuery<any>("agent_runs", { column: "ran_at" })).data.filter((r: any) => r.agent_id === id);
+  const runs = useSuspenseQuery(listQuery<any>("agent_runs", { column: "started_at" })).data.filter((r: any) => r.agent_id === id);
   const upsert = useUpsert("agents");
   const del = useDelete("agents");
   const nav = useNavigate();
@@ -86,9 +86,9 @@ function AgentDetail() {
           <div className="space-y-2">
             {runs.slice(0, 10).map((r: any) => (
               <div key={r.id} className="flex items-center justify-between rounded-lg border border-border bg-surface/40 px-3 py-2 text-sm">
-                <div>{new Date(r.ran_at).toLocaleString()}</div>
+                <div>{new Date(r.started_at).toLocaleString()}</div>
                 <div className="flex items-center gap-3">
-                  {r.duration_ms != null && <span className="text-xs text-muted-foreground">{r.duration_ms}ms</span>}
+                  {r.duration_seconds != null && <span className="text-xs text-muted-foreground">{r.duration_seconds}ms</span>}
                   <StatusBadge status={r.status} />
                 </div>
               </div>

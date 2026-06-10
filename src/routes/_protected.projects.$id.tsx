@@ -68,7 +68,7 @@ function ProjectDetail() {
         <F label="Problem it solves"><Textarea rows={3} value={v.problem_solved || ""} onChange={(e) => setF({ ...v, problem_solved: e.target.value })} /></F>
         <F label="Tools (csv)"><Input value={arrayToCsv(v.tools_used)} onChange={(e) => setF({ ...v, tools_used: csvToArray(e.target.value) })} /></F>
         <div className="flex flex-wrap gap-1.5">{(v.tools_used || []).map((t: string) => <Chip key={t}>{t}</Chip>)}</div>
-        <F label="Learnings"><Textarea rows={3} value={v.learnings_unused || ""} onChange={(e) => setF({ ...v, learnings: e.target.value })} /></F>
+        <F label="Learnings"><Textarea rows={3} value={v.learnings || ""} onChange={(e) => setF({ ...v, learnings: e.target.value })} /></F>
         <F label="Next improvements"><Textarea rows={3} value={v.next_improvements || ""} onChange={(e) => setF({ ...v, next_improvements: e.target.value })} /></F>
         <div className="text-xs text-muted-foreground">Created {new Date(p.created_at).toLocaleString()} · Updated {new Date(p.updated_at).toLocaleString()}</div>
       </div>
