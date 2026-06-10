@@ -12,6 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as ProtectedIndexRouteImport } from './routes/_protected.index'
+import { Route as ProtectedProjectsRouteImport } from './routes/_protected.projects'
+import { Route as ProtectedPortfolioRouteImport } from './routes/_protected.portfolio'
+import { Route as ProtectedAgentsRouteImport } from './routes/_protected.agents'
+import { Route as ProtectedProjectsIdRouteImport } from './routes/_protected.projects.$id'
+import { Route as ProtectedAgentsIdRouteImport } from './routes/_protected.agents.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -27,27 +32,90 @@ const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedProjectsRoute = ProtectedProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedPortfolioRoute = ProtectedPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAgentsRoute = ProtectedAgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedProjectsIdRoute = ProtectedProjectsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProtectedProjectsRoute,
+} as any)
+const ProtectedAgentsIdRoute = ProtectedAgentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProtectedAgentsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof ProtectedIndexRoute
   '/login': typeof LoginRoute
+  '/agents': typeof ProtectedAgentsRouteWithChildren
+  '/portfolio': typeof ProtectedPortfolioRoute
+  '/projects': typeof ProtectedProjectsRouteWithChildren
+  '/agents/$id': typeof ProtectedAgentsIdRoute
+  '/projects/$id': typeof ProtectedProjectsIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/agents': typeof ProtectedAgentsRouteWithChildren
+  '/portfolio': typeof ProtectedPortfolioRoute
+  '/projects': typeof ProtectedProjectsRouteWithChildren
   '/': typeof ProtectedIndexRoute
+  '/agents/$id': typeof ProtectedAgentsIdRoute
+  '/projects/$id': typeof ProtectedProjectsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_protected': typeof ProtectedRouteWithChildren
   '/login': typeof LoginRoute
+  '/_protected/agents': typeof ProtectedAgentsRouteWithChildren
+  '/_protected/portfolio': typeof ProtectedPortfolioRoute
+  '/_protected/projects': typeof ProtectedProjectsRouteWithChildren
   '/_protected/': typeof ProtectedIndexRoute
+  '/_protected/agents/$id': typeof ProtectedAgentsIdRoute
+  '/_protected/projects/$id': typeof ProtectedProjectsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/agents'
+    | '/portfolio'
+    | '/projects'
+    | '/agents/$id'
+    | '/projects/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/'
-  id: '__root__' | '/_protected' | '/login' | '/_protected/'
+  to:
+    | '/login'
+    | '/agents'
+    | '/portfolio'
+    | '/projects'
+    | '/'
+    | '/agents/$id'
+    | '/projects/$id'
+  id:
+    | '__root__'
+    | '/_protected'
+    | '/login'
+    | '/_protected/agents'
+    | '/_protected/portfolio'
+    | '/_protected/projects'
+    | '/_protected/'
+    | '/_protected/agents/$id'
+    | '/_protected/projects/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -78,14 +146,78 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/projects': {
+      id: '/_protected/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProtectedProjectsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/portfolio': {
+      id: '/_protected/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof ProtectedPortfolioRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/agents': {
+      id: '/_protected/agents'
+      path: '/agents'
+      fullPath: '/agents'
+      preLoaderRoute: typeof ProtectedAgentsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/projects/$id': {
+      id: '/_protected/projects/$id'
+      path: '/$id'
+      fullPath: '/projects/$id'
+      preLoaderRoute: typeof ProtectedProjectsIdRouteImport
+      parentRoute: typeof ProtectedProjectsRoute
+    }
+    '/_protected/agents/$id': {
+      id: '/_protected/agents/$id'
+      path: '/$id'
+      fullPath: '/agents/$id'
+      preLoaderRoute: typeof ProtectedAgentsIdRouteImport
+      parentRoute: typeof ProtectedAgentsRoute
+    }
   }
 }
 
+interface ProtectedAgentsRouteChildren {
+  ProtectedAgentsIdRoute: typeof ProtectedAgentsIdRoute
+}
+
+const ProtectedAgentsRouteChildren: ProtectedAgentsRouteChildren = {
+  ProtectedAgentsIdRoute: ProtectedAgentsIdRoute,
+}
+
+const ProtectedAgentsRouteWithChildren = ProtectedAgentsRoute._addFileChildren(
+  ProtectedAgentsRouteChildren,
+)
+
+interface ProtectedProjectsRouteChildren {
+  ProtectedProjectsIdRoute: typeof ProtectedProjectsIdRoute
+}
+
+const ProtectedProjectsRouteChildren: ProtectedProjectsRouteChildren = {
+  ProtectedProjectsIdRoute: ProtectedProjectsIdRoute,
+}
+
+const ProtectedProjectsRouteWithChildren =
+  ProtectedProjectsRoute._addFileChildren(ProtectedProjectsRouteChildren)
+
 interface ProtectedRouteChildren {
+  ProtectedAgentsRoute: typeof ProtectedAgentsRouteWithChildren
+  ProtectedPortfolioRoute: typeof ProtectedPortfolioRoute
+  ProtectedProjectsRoute: typeof ProtectedProjectsRouteWithChildren
   ProtectedIndexRoute: typeof ProtectedIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedAgentsRoute: ProtectedAgentsRouteWithChildren,
+  ProtectedPortfolioRoute: ProtectedPortfolioRoute,
+  ProtectedProjectsRoute: ProtectedProjectsRouteWithChildren,
   ProtectedIndexRoute: ProtectedIndexRoute,
 }
 
@@ -100,3 +232,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
