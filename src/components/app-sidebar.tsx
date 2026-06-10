@@ -33,35 +33,35 @@ import { logout } from "@/lib/auth";
 
 const sections = [
   {
-    label: "Command",
+    label: "Komento",
     items: [
-      { title: "Dashboard", url: "/", icon: LayoutDashboard },
-      { title: "Portfolio", url: "/portfolio", icon: User },
+      { title: "Ohjauskeskus", url: "/", icon: LayoutDashboard },
+      { title: "AI-portfolio", url: "/portfolio", icon: User },
     ],
   },
   {
-    label: "Build",
+    label: "Rakenna",
     items: [
-      { title: "Projects", url: "/projects", icon: FolderKanban },
-      { title: "Agents", url: "/agents", icon: Bot },
-      { title: "Experiments", url: "/experiments", icon: FlaskConical },
+      { title: "Projektit", url: "/projects", icon: FolderKanban },
+      { title: "Agentit", url: "/agents", icon: Bot },
+      { title: "AI-kokeet", url: "/experiments", icon: FlaskConical },
     ],
   },
   {
-    label: "Intel",
+    label: "Tieto",
     items: [
-      { title: "Briefings", url: "/briefings", icon: Newspaper },
-      { title: "News & Trends", url: "/news", icon: Radio },
-      { title: "Social Insights", url: "/social", icon: MessagesSquare },
+      { title: "Päiväbriefingit", url: "/briefings", icon: Newspaper },
+      { title: "Uutiset ja trendit", url: "/news", icon: Radio },
+      { title: "Somehavainnot", url: "/social", icon: MessagesSquare },
     ],
   },
   {
-    label: "Reflect",
+    label: "Reflektoi",
     items: [
-      { title: "Journal", url: "/journal", icon: BookOpen },
-      { title: "Analytics", url: "/analytics", icon: LineChart },
-      { title: "Automation", url: "/automation", icon: Zap },
-      { title: "Settings", url: "/settings", icon: Settings },
+      { title: "Oppimispäiväkirja", url: "/journal", icon: BookOpen },
+      { title: "Analytiikka", url: "/analytics", icon: LineChart },
+      { title: "Automaatiot", url: "/automation", icon: Zap },
+      { title: "Asetukset", url: "/settings", icon: Settings },
     ],
   },
 ];
@@ -85,7 +85,7 @@ export function AppSidebar() {
           {!collapsed && (
             <div className="min-w-0">
               <div className="font-display text-sm font-bold text-gradient truncate">AI Growth OS</div>
-              <div className="text-[10px] text-muted-foreground truncate">Command Center</div>
+              <div className="text-[10px] text-muted-foreground truncate">Ohjauskeskus</div>
             </div>
           )}
         </div>
@@ -123,7 +123,7 @@ export function AppSidebar() {
               }}
             >
               <LogOut className="h-4 w-4" />
-              {!collapsed && <span>Sign out</span>}
+              {!collapsed && <span>Kirjaudu ulos</span>}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

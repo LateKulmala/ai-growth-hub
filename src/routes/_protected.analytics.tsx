@@ -9,7 +9,7 @@ import { Flame, FlaskConical, FolderKanban, Bot, Trophy, Activity } from "lucide
 export const Route = createFileRoute("/_protected/analytics")({
   component: AnalyticsPage,
   errorComponent: ({ error }) => <div className="p-4 text-destructive">{error.message}</div>,
-  notFoundComponent: () => <div className="p-4">Not found</div>,
+  notFoundComponent: () => <div className="p-4">Ei löytynyt</div>,
 });
 
 function AnalyticsPage() {
@@ -29,7 +29,7 @@ function AnalyticsPage() {
   const categoryAgg = useMemo(() => {
     const map = new Map<string, number>();
     exps.forEach((e) => {
-      const k = e.category || "Uncategorized";
+      const k = e.category || "Ei kategoriaa";
       map.set(k, (map.get(k) || 0) + 1);
     });
     return Array.from(map.entries()).map(([category, count]) => ({ category, count }));
@@ -46,31 +46,31 @@ function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Analytics" description="Your AI growth, visualized" />
+      <PageHeader title="Analytiikka" description="AI-kasvusi visualisoituna" />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <StatCard label="Experiments" value={completed.length} icon={FlaskConical} tone="primary" />
-        <StatCard label="Avg Score" value={avg} icon={Activity} tone="accent" />
-        <StatCard label="Learning Score" value={profile?.learning_score ?? 0} icon={Trophy} tone="success" />
-        <StatCard label="Streak" value={`${profile?.weekly_streak ?? 0}d`} icon={Flame} tone="warning" />
-        <StatCard label="Projects" value={projects.length} icon={FolderKanban} />
-        <StatCard label="Agents" value={agents.length} icon={Bot} tone="accent" />
+        <StatCard label="AI-kokeet" value={completed.length} icon={FlaskConical} tone="primary" />
+        <StatCard label="Keskipisteet" value={avg} icon={Activity} tone="accent" />
+        <StatCard label="Oppimispisteet" value={profile?.learning_score ?? 0} icon={Trophy} tone="success" />
+        <StatCard label="Putki" value={`${profile?.weekly_streak ?? 0} pv`} icon={Flame} tone="warning" />
+        <StatCard label="Projektit" value={projects.length} icon={FolderKanban} />
+        <StatCard label="Agentit" value={agents.length} icon={Bot} tone="accent" />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Chart title="Score over time">
+        <Chart title="Pisteet ajan myötä">
           <ResponsiveContainer>
             <LineChart data={scoreSeries}>
               <CartesianGrid strokeOpacity={0.1} />
               <XAxis dataKey="idx" stroke="oklch(0.70 0.02 260)" fontSize={11} />
               <YAxis stroke="oklch(0.70 0.02 260)" fontSize={11} domain={[0, 100]} />
               <Tooltip contentStyle={{ background: "oklch(0.20 0.025 260)", border: "1px solid var(--border)" }} />
-              <Line type="monotone" dataKey="score" stroke="oklch(0.78 0.16 200)" strokeWidth={2} dot={{ r: 3, fill: "oklch(0.78 0.16 200)" }} />
+              <Line type="monotone" dataKey="score_total" stroke="oklch(0.78 0.16 200)" strokeWidth={2} dot={{ r: 3, fill: "oklch(0.78 0.16 200)" }} />
             </LineChart>
           </ResponsiveContainer>
         </Chart>
 
-        <Chart title="Experiments by category">
+        <Chart title="Kokeet kategorioittain">
           <ResponsiveContainer>
             <BarChart data={categoryAgg}>
               <CartesianGrid strokeOpacity={0.1} />
@@ -82,7 +82,7 @@ function AnalyticsPage() {
           </ResponsiveContainer>
         </Chart>
 
-        <Chart title="Most used tools">
+        <Chart title="Käytetyimmät työkalut">
           <ResponsiveContainer>
             <BarChart data={toolAgg} layout="vertical">
               <CartesianGrid strokeOpacity={0.1} />
@@ -95,7 +95,7 @@ function AnalyticsPage() {
         </Chart>
 
         <div className="surface-card p-5">
-          <div className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Top scoring experiments</div>
+          <div className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Parhaat kokeet</div>
           <ul className="space-y-2">
             {best.map((e) => (
               <li key={e.id} className="flex items-center justify-between text-sm">
@@ -103,9 +103,9 @@ function AnalyticsPage() {
                 <span className="text-primary font-semibold">{e.score_total}</span>
               </li>
             ))}
-            {best.length === 0 && <li className="text-sm text-muted-foreground">No completed experiments yet.</li>}
+            {best.length === 0 && <li className="text-sm text-muted-foreground">Ei valmiita kokeita vielä.</li>}
           </ul>
-          <div className="text-xs uppercase tracking-wider text-muted-foreground mt-5 mb-3">Weakest areas</div>
+          <div className="text-xs uppercase tracking-wider text-muted-foreground mt-5 mb-3">Heikoimmat alueet</div>
           <ul className="space-y-2">
             {weakest.map((e) => (
               <li key={e.id} className="flex items-center justify-between text-sm">

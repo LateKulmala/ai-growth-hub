@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Download, Send, Webhook, KeyRound, Save, Bot, Clock, Zap, BookOpen, ShieldCheck } from "lucide-react";
+import { Download, Send, Webhook, KeyRound, Save, Bot, Clock, Zap, BookOpen, ShieldCheck, Languages } from "lucide-react";
 import { getAllowedEmail } from "@/lib/auth";
 import { listQuery } from "@/lib/queries";
 import { useUpsert, arrayToCsv, csvToArray } from "@/lib/mutations";
@@ -18,8 +18,14 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_protected/settings")({
   component: SettingsPage,
   errorComponent: ({ error }) => <div className="p-4 text-destructive">{error.message}</div>,
-  notFoundComponent: () => <div className="p-4">Not found</div>,
+  notFoundComponent: () => <div className="p-4">Ei löytynyt</div>,
 });
+
+const TG_LABEL: Record<string, string> = {
+  disconnected: "Ei yhdistetty",
+  pending: "Odottaa asetusta",
+  connected: "Yhdistetty",
+};
 
 function SettingsPage() {
   const profile = useSuspenseQuery(listQuery<any>("profile")).data[0];
@@ -33,7 +39,7 @@ function SettingsPage() {
 
   function save() {
     upsert.mutate(v, {
-      onSuccess: () => toast.success("Settings saved"),
+      onSuccess: () => toast.success("Asetukset tallennettu"),
     });
   }
 
@@ -51,7 +57,7 @@ function SettingsPage() {
     a.download = `ai-growth-os-export-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("Export downloaded");
+    toast.success("Vienti ladattu");
   }
 
   const tgStatus = v.telegram_bot_status || "disconnected";
@@ -60,46 +66,60 @@ function SettingsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Settings"
-        description="Profile, integrations, automation, data"
-        actions={<Button onClick={save}><Save className="h-4 w-4 mr-1" />Save changes</Button>}
+        title="Asetukset"
+        description="Profiili, integraatiot, automaatio ja data"
+        actions={<Button onClick={save}><Save className="h-4 w-4 mr-1" />Tallenna muutokset</Button>}
       />
 
-      {/* Private access notice */}
+      {/* Yksityinen pääsy */}
       <div className="surface-card p-6 space-y-3 border-primary/30">
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-5 w-5 text-primary" />
-          <h3 className="font-display text-lg font-semibold">Private access</h3>
+          <h3 className="font-display text-lg font-semibold">Yksityinen pääsy</h3>
         </div>
         <ul className="text-sm text-muted-foreground space-y-1.5 list-disc pl-5">
-          <li>This is a <span className="text-foreground font-medium">private one-user app</span>. Public registration is disabled.</li>
-          <li>Only <span className="text-foreground font-medium">{getAllowedEmail() || "the configured owner"}</span> can sign in.</li>
-          <li>A private access key is required at login in addition to the password.</li>
-          <li>Keep the access key secret — it is stored only in <code className="font-mono text-xs">VITE_APP_ACCESS_KEY</code>, never in the database.</li>
-          <li>To rotate the key, update <code className="font-mono text-xs">VITE_APP_ACCESS_KEY</code> in your environment and redeploy.</li>
+          <li>Tämä on <span className="text-foreground font-medium">yksityinen yhden käyttäjän sovellus</span>. Julkinen rekisteröinti on poistettu käytöstä.</li>
+          <li>Vain <span className="text-foreground font-medium">{getAllowedEmail() || "määritetty omistaja"}</span> voi kirjautua sisään.</li>
+          <li>Yksityinen pääsyavain vaaditaan kirjautuessa salasanan lisäksi.</li>
+          <li>Pidä pääsyavain salassa — se on tallennettu vain <code className="font-mono text-xs">VITE_APP_ACCESS_KEY</code>-muuttujaan, ei tietokantaan.</li>
+          <li>Avaimen vaihto: päivitä <code className="font-mono text-xs">VITE_APP_ACCESS_KEY</code> ympäristöösi ja julkaise uudelleen.</li>
         </ul>
       </div>
 
-      {/* Profile */}
+      {/* Kieli */}
+      <div className="surface-card p-6 space-y-2 border-accent/30">
+        <div className="flex items-center gap-2">
+          <Languages className="h-5 w-5 text-accent" />
+          <h3 className="font-display text-lg font-semibold">Sisällön kieli</h3>
+        </div>
+        <p className="text-sm">
+          <span className="text-foreground font-medium">Kaikki AI:n luoma sisältö tuotetaan oletuksena suomeksi.</span>
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Tämä koskee päiväbriefingejä, AI-uutisten yhteenvetoja, kokeita, kokeiden arvioita, Telegram-viestejä, somehavaintojen analyysejä, päiväkirjaehdotuksia ja muuta automaatioiden tuottamaa sisältöä.
+        </p>
+      </div>
+
+      {/* Profiili */}
       <div className="surface-card p-6 space-y-4">
-        <h3 className="font-display text-lg font-semibold">Profile</h3>
+        <h3 className="font-display text-lg font-semibold">Profiili</h3>
         <div className="grid sm:grid-cols-2 gap-4">
-          <F label="Display name"><Input value={v.display_name || ""} onChange={(e) => update({ display_name: e.target.value })} /></F>
-          <F label="Focus areas (csv)"><Input value={arrayToCsv(v.focus_areas)} onChange={(e) => update({ focus_areas: csvToArray(e.target.value) })} /></F>
+          <F label="Näyttönimi"><Input value={v.display_name || ""} onChange={(e) => update({ display_name: e.target.value })} /></F>
+          <F label="Painopistealueet (pilkulla)"><Input value={arrayToCsv(v.focus_areas)} onChange={(e) => update({ focus_areas: csvToArray(e.target.value) })} /></F>
         </div>
         <F label="Bio"><Textarea rows={3} value={v.bio || ""} onChange={(e) => update({ bio: e.target.value })} /></F>
       </div>
 
-      {/* Integrations */}
+      {/* Integraatiot */}
       <div className="surface-card p-6 space-y-5">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-display text-lg font-semibold flex items-center gap-2">
-              <Zap className="h-5 w-5 text-primary" /> Integrations
+              <Zap className="h-5 w-5 text-primary" /> Integraatiot
             </h3>
-            <p className="text-sm text-muted-foreground">Connect n8n and Telegram to power your daily automations.</p>
+            <p className="text-sm text-muted-foreground">Yhdistä n8n ja Telegram tehostaaksesi päivittäisiä automaatioita.</p>
           </div>
-          <Link to="/automation" className="text-xs text-primary hover:underline">View automation logs →</Link>
+          <Link to="/automation" className="text-xs text-primary hover:underline">Katso automaatioiden lokit →</Link>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -109,17 +129,17 @@ function SettingsPage() {
               <div className="grid place-items-center h-8 w-8 rounded-md bg-primary/15 text-primary"><Webhook className="h-4 w-4" /></div>
               <div>
                 <div className="font-display font-semibold">n8n</div>
-                <div className="text-xs text-muted-foreground">Inbound webhook URL for your workflows.</div>
+                <div className="text-xs text-muted-foreground">Sisääntuleva webhook-osoite työnkuluillesi.</div>
               </div>
             </div>
-            <F label="Webhook URL">
+            <F label="Webhook-osoite">
               <Input
-                placeholder="https://your-n8n.example.com/webhook/ai-growth"
+                placeholder="https://oma-n8n.example.com/webhook/ai-growth"
                 value={v.n8n_webhook_url || ""}
                 onChange={(e) => update({ n8n_webhook_url: e.target.value })}
               />
             </F>
-            <p className="text-xs text-muted-foreground">n8n will POST briefings, news and experiments to this app via Supabase.</p>
+            <p className="text-xs text-muted-foreground">n8n lähettää briefingit, uutiset ja kokeet tähän sovellukseen Supabasen kautta.</p>
           </div>
 
           {/* Telegram */}
@@ -129,25 +149,25 @@ function SettingsPage() {
               <div className="flex-1">
                 <div className="font-display font-semibold flex items-center gap-2">
                   Telegram
-                  <Badge variant={tgVariant as any} className="text-[10px] uppercase">{tgStatus}</Badge>
+                  <Badge variant={tgVariant as any} className="text-[10px] uppercase">{TG_LABEL[tgStatus] || tgStatus}</Badge>
                 </div>
-                <div className="text-xs text-muted-foreground">Receive daily briefings in your Telegram chat.</div>
+                <div className="text-xs text-muted-foreground">Vastaanota päiväbriefingit Telegram-keskusteluusi.</div>
               </div>
             </div>
-            <F label="Bot status">
+            <F label="Botin tila">
               <select
                 className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
                 value={v.telegram_bot_status || "disconnected"}
                 onChange={(e) => update({ telegram_bot_status: e.target.value })}
               >
-                <option value="disconnected">Disconnected</option>
-                <option value="pending">Pending setup</option>
-                <option value="connected">Connected</option>
+                <option value="disconnected">Ei yhdistetty</option>
+                <option value="pending">Odottaa asetusta</option>
+                <option value="connected">Yhdistetty</option>
               </select>
             </F>
             <F label="Chat ID">
               <Input
-                placeholder="e.g. 123456789"
+                placeholder="esim. 123456789"
                 value={v.telegram_chat_id || ""}
                 onChange={(e) => update({ telegram_chat_id: e.target.value })}
               />
@@ -155,14 +175,14 @@ function SettingsPage() {
           </div>
         </div>
 
-        {/* Schedule + toggles */}
+        {/* Aikataulu + kytkimet */}
         <div className="surface-card p-5 space-y-4 bg-card/40">
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-primary" />
-            <div className="font-display font-semibold">Daily automation</div>
+            <div className="font-display font-semibold">Päivittäinen automaatio</div>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
-            <F label="Daily briefing time">
+            <F label="Briefingin lähetysaika">
               <Input
                 type="time"
                 value={(v.daily_briefing_time || "08:00").toString().slice(0, 5)}
@@ -171,15 +191,15 @@ function SettingsPage() {
             </F>
             <ToggleRow
               icon={<Send className="h-4 w-4" />}
-              title="Daily Telegram briefing"
-              description="Send the 5-minute briefing to Telegram."
+              title="Päivittäinen Telegram-briefing"
+              description="Lähetä 5 minuutin briefing Telegramiin."
               checked={!!v.daily_telegram_enabled}
               onChange={(c: boolean) => update({ daily_telegram_enabled: c })}
             />
             <ToggleRow
               icon={<Bot className="h-4 w-4" />}
-              title="Daily experiment generation"
-              description="Auto-create today's AI experiment."
+              title="Päivittäinen kokeen luonti"
+              description="Luo päivän AI-koe automaattisesti."
               checked={!!v.daily_experiment_enabled}
               onChange={(c: boolean) => update({ daily_experiment_enabled: c })}
             />
@@ -187,23 +207,23 @@ function SettingsPage() {
         </div>
       </div>
 
-      {/* Automation docs */}
+      {/* Automaation dokumentaatio */}
       <div className="surface-card p-6 space-y-3">
         <div className="flex items-center gap-2">
           <BookOpen className="h-5 w-5 text-primary" />
-          <h3 className="font-display text-lg font-semibold">How n8n will power this OS</h3>
+          <h3 className="font-display text-lg font-semibold">Miten n8n toimii tämän OS:n moottorina</h3>
         </div>
         <p className="text-sm text-muted-foreground">
-          The app is wired and ready. Once you connect n8n + Telegram above, scheduled workflows will:
+          Sovellus on valmiina. Kun yhdistät n8n:n ja Telegramin yllä, ajastetut työnkulut:
         </p>
         <ol className="space-y-2 text-sm">
           {[
-            "Collect AI news from RSS, X/Twitter, Reddit and HackerNews.",
-            "Analyze trends and cluster the most important signals.",
-            "Generate a 5-minute daily briefing (summary, hot topics, why it matters).",
-            "Generate one practical daily AI experiment matched to your focus areas.",
-            "Send the briefing + experiment to your Telegram chat.",
-            "Store every result, score and message in Supabase for review here.",
+            "Keräävät AI-uutisia RSS:stä, X/Twitteristä, Redditistä ja HackerNewsista.",
+            "Analysoivat trendejä ja klusteroivat tärkeimmät signaalit.",
+            "Luovat 5 minuutin päiväbriefingin (tiivistelmä, kuumat aiheet, miksi tämä on tärkeää).",
+            "Generoivat yhden käytännön AI-kokeen painopistealueidesi mukaan.",
+            "Lähettävät briefingin ja kokeen Telegram-keskusteluusi.",
+            "Tallentavat kaikki tulokset, pisteet ja viestit Supabaseen tarkasteltavaksi täällä.",
           ].map((t, i) => (
             <li key={i} className="flex gap-3">
               <span className="grid place-items-center h-6 w-6 rounded-md bg-primary/15 text-primary text-xs font-semibold shrink-0">{i + 1}</span>
@@ -211,19 +231,22 @@ function SettingsPage() {
             </li>
           ))}
         </ol>
-        <div className="text-xs text-muted-foreground pt-2">
-          Each run will be recorded under <Link to="/automation" className="text-primary hover:underline">Automation Logs</Link>.
+        <div className="rounded-lg border border-accent/30 bg-accent/5 p-3 text-xs text-foreground/90">
+          <span className="font-semibold">Kieliohje n8n:lle:</span> All n8n-generated content must be written in Finnish unless explicitly changed later. Tämä koskee uutiskeräystä, briefingejä, kokeita, Telegram-viestejä, kokeiden arviointia ja somehavaintojen analyysejä.
+        </div>
+        <div className="text-xs text-muted-foreground pt-1">
+          Jokainen suoritus kirjautuu kohtaan <Link to="/automation" className="text-primary hover:underline">Automaatioiden lokit</Link>.
         </div>
       </div>
 
-      {/* Other */}
+      {/* Muut */}
       <div className="grid gap-4 md:grid-cols-2">
-        <PlaceholderCard icon={<KeyRound className="h-4 w-4" />} title="API integrations" description="OpenAI / Anthropic / Perplexity keys (stored as Supabase secrets later)">
+        <PlaceholderCard icon={<KeyRound className="h-4 w-4" />} title="API-integraatiot" description="OpenAI / Anthropic / Perplexity -avaimet (tallennetaan Supabase-salaisuuksiksi myöhemmin)">
           <Input placeholder="OPENAI_API_KEY" disabled />
           <Input placeholder="ANTHROPIC_API_KEY" disabled />
         </PlaceholderCard>
-        <PlaceholderCard icon={<Download className="h-4 w-4" />} title="Export data" description="Download all your data as JSON.">
-          <Button variant="outline" onClick={exportAll}><Download className="h-4 w-4 mr-1" />Export everything</Button>
+        <PlaceholderCard icon={<Download className="h-4 w-4" />} title="Vie data" description="Lataa kaikki datasi JSON-muodossa.">
+          <Button variant="outline" onClick={exportAll}><Download className="h-4 w-4 mr-1" />Vie kaikki</Button>
         </PlaceholderCard>
       </div>
     </div>

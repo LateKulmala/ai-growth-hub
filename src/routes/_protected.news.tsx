@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 export const Route = createFileRoute("/_protected/news")({
   component: NewsPage,
   errorComponent: ({ error }) => <div className="p-4 text-destructive">{error.message}</div>,
-  notFoundComponent: () => <div className="p-4">Not found</div>,
+  notFoundComponent: () => <div className="p-4">Ei löytynyt</div>,
 });
 
 function NewsPage() {
@@ -26,16 +26,16 @@ function NewsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="News & Trend Radar" description="AI news, tools and trends · curated"
-        actions={<Button onClick={() => { setDraft({ relevance_score: 5, trend_score: 5 }); setOpen(true); }}><Plus className="h-4 w-4 mr-1" />New item</Button>} />
+      <PageHeader title="Uutiset ja trendit" description="AI-uutiset, työkalut ja trendit · kuratoituna"
+        actions={<Button onClick={() => { setDraft({ relevance_score: 5, trend_score: 5 }); setOpen(true); }}><Plus className="h-4 w-4 mr-1" />Uusi merkintä</Button>} />
 
-      {items.length === 0 ? <EmptyState title="Radar is quiet" /> : (
+      {items.length === 0 ? <EmptyState title="Tutka on hiljainen" /> : (
         <div className="grid gap-3">
           {items.map((n) => (
             <div key={n.id} className="surface-card p-5">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <div className="text-xs text-muted-foreground">{n.source} · {new Date(n.discovered_at).toLocaleDateString()}</div>
+                  <div className="text-xs text-muted-foreground">{n.source} · {new Date(n.discovered_at).toLocaleDateString("fi-FI")}</div>
                   <h3 className="font-display text-lg font-semibold truncate">{n.title}</h3>
                   <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{n.summary}</p>
                 </div>
@@ -46,7 +46,7 @@ function NewsPage() {
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-3">
                 <div className="flex flex-wrap gap-1.5">{(n.tags || []).map((t: string) => <Chip key={t}>{t}</Chip>)}</div>
-                {n.url && <a className="text-xs text-primary inline-flex items-center gap-1" href={n.url} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3" />Open</a>}
+                {n.url && <a className="text-xs text-primary inline-flex items-center gap-1" href={n.url} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3" />Avaa</a>}
                 <Button variant="ghost" size="sm" className="ml-auto" onClick={() => del.mutate(n.id)}><Trash2 className="h-4 w-4" /></Button>
               </div>
             </div>
@@ -56,24 +56,24 @@ function NewsPage() {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl">
-          <DialogHeader><DialogTitle>New news item</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Uusi uutismerkintä</DialogTitle></DialogHeader>
           <div className="space-y-3">
-            <R label="Title"><Input value={draft.title || ""} onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></R>
+            <R label="Otsikko"><Input value={draft.title || ""} onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></R>
             <div className="grid grid-cols-2 gap-3">
-              <R label="Source"><Input value={draft.source || ""} onChange={(e) => setDraft({ ...draft, source: e.target.value })} /></R>
-              <R label="Category"><Input value={draft.category || ""} onChange={(e) => setDraft({ ...draft, category: e.target.value })} /></R>
+              <R label="Lähde"><Input value={draft.source || ""} onChange={(e) => setDraft({ ...draft, source: e.target.value })} /></R>
+              <R label="Kategoria"><Input value={draft.category || ""} onChange={(e) => setDraft({ ...draft, category: e.target.value })} /></R>
             </div>
-            <R label="URL"><Input value={draft.url || ""} onChange={(e) => setDraft({ ...draft, url: e.target.value })} /></R>
-            <R label="Summary"><Textarea rows={3} value={draft.summary || ""} onChange={(e) => setDraft({ ...draft, summary: e.target.value })} /></R>
+            <R label="Osoite"><Input value={draft.url || ""} onChange={(e) => setDraft({ ...draft, url: e.target.value })} /></R>
+            <R label="Yhteenveto"><Textarea rows={3} value={draft.summary || ""} onChange={(e) => setDraft({ ...draft, summary: e.target.value })} /></R>
             <div className="grid grid-cols-2 gap-3">
-              <R label="Relevance 1-10"><Input type="number" min={1} max={10} value={draft.relevance_score} onChange={(e) => setDraft({ ...draft, relevance_score: Number(e.target.value) })} /></R>
-              <R label="Trend 1-10"><Input type="number" min={1} max={10} value={draft.trend_score} onChange={(e) => setDraft({ ...draft, trend_score: Number(e.target.value) })} /></R>
+              <R label="Relevanssi 1-10"><Input type="number" min={1} max={10} value={draft.relevance_score} onChange={(e) => setDraft({ ...draft, relevance_score: Number(e.target.value) })} /></R>
+              <R label="Trendi 1-10"><Input type="number" min={1} max={10} value={draft.trend_score} onChange={(e) => setDraft({ ...draft, trend_score: Number(e.target.value) })} /></R>
             </div>
-            <R label="Tags (csv)"><Input value={arrayToCsv(draft.tags)} onChange={(e) => setDraft({ ...draft, tags: csvToArray(e.target.value) })} /></R>
+            <R label="Tunnisteet (pilkulla)"><Input value={arrayToCsv(draft.tags)} onChange={(e) => setDraft({ ...draft, tags: csvToArray(e.target.value) })} /></R>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => upsert.mutate(draft, { onSuccess: () => setOpen(false) })} disabled={!draft.title || upsert.isPending}>Create</Button>
+            <Button variant="ghost" onClick={() => setOpen(false)}>Peruuta</Button>
+            <Button onClick={() => upsert.mutate(draft, { onSuccess: () => setOpen(false) })} disabled={!draft.title || upsert.isPending}>Luo</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -63,6 +63,25 @@ export function PageHeader({
   );
 }
 
+const STATUS_LABELS: Record<string, string> = {
+  active: "Aktiivinen",
+  running: "Käynnissä",
+  completed: "Valmis",
+  "in progress": "Kesken",
+  in_progress: "Kesken",
+  planned: "Suunniteltu",
+  idle: "Vapaa",
+  skipped: "Ohitettu",
+  paused: "Tauolla",
+  error: "Virhe",
+  archived: "Arkistoitu",
+  pending: "Odottaa",
+  success: "Onnistui",
+  failed: "Epäonnistui",
+  disconnected: "Ei yhdistetty",
+  connected: "Yhdistetty",
+};
+
 export function StatusBadge({ status }: { status?: string | null }) {
   const s = (status || "").toLowerCase();
   const map: Record<string, string> = {
@@ -77,11 +96,14 @@ export function StatusBadge({ status }: { status?: string | null }) {
     paused: "bg-[color:var(--warning)]/15 text-[color:var(--warning)] border-[color:var(--warning)]/30",
     error: "bg-destructive/15 text-destructive border-destructive/30",
     archived: "bg-muted text-muted-foreground border-border",
+    success: "bg-[color:var(--success)]/15 text-[color:var(--success)] border-[color:var(--success)]/30",
+    failed: "bg-destructive/15 text-destructive border-destructive/30",
   };
   const cls = map[s] || "bg-muted text-muted-foreground border-border";
+  const label = STATUS_LABELS[s] || status || "—";
   return (
     <span className={cn("inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider", cls)}>
-      {status || "—"}
+      {label}
     </span>
   );
 }

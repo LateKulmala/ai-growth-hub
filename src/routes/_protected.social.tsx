@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 export const Route = createFileRoute("/_protected/social")({
   component: SocialPage,
   errorComponent: ({ error }) => <div className="p-4 text-destructive">{error.message}</div>,
-  notFoundComponent: () => <div className="p-4">Not found</div>,
+  notFoundComponent: () => <div className="p-4">Ei löytynyt</div>,
 });
 
 function SocialPage() {
@@ -26,10 +26,10 @@ function SocialPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Social Insights" description="AI discussion intel from LinkedIn & beyond"
-        actions={<Button onClick={() => { setDraft({ platform: "LinkedIn", relevance_score: 5 }); setOpen(true); }}><Plus className="h-4 w-4 mr-1" />New insight</Button>} />
+      <PageHeader title="Somehavainnot" description="AI-keskusteludata LinkedInistä ja muualta"
+        actions={<Button onClick={() => { setDraft({ platform: "LinkedIn", relevance_score: 5 }); setOpen(true); }}><Plus className="h-4 w-4 mr-1" />Uusi havainto</Button>} />
 
-      {items.length === 0 ? <EmptyState title="No insights yet" /> : (
+      {items.length === 0 ? <EmptyState title="Ei havaintoja vielä" /> : (
         <div className="grid gap-3 md:grid-cols-2">
           {items.map((s) => (
             <div key={s.id} className="surface-card p-5">
@@ -37,11 +37,11 @@ function SocialPage() {
                 <span>{s.platform} · {s.author}</span>
                 <span>Rel <span className="text-primary font-semibold">{s.relevance_score}</span></span>
               </div>
-              <h3 className="font-display text-lg font-semibold mt-1">{s.topic || "Untitled"}</h3>
+              <h3 className="font-display text-lg font-semibold mt-1">{s.topic || "Nimetön"}</h3>
               <p className="mt-1 text-sm text-muted-foreground line-clamp-3">{s.summary}</p>
-              {s.opportunity && <p className="mt-2 text-sm"><span className="text-primary">Opportunity: </span>{s.opportunity}</p>}
+              {s.opportunity && <p className="mt-2 text-sm"><span className="text-primary">Mahdollisuus: </span>{s.opportunity}</p>}
               <div className="mt-3 flex items-center gap-3 text-xs">
-                {s.post_url && <a className="text-primary inline-flex items-center gap-1" href={s.post_url} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3" />Post</a>}
+                {s.post_url && <a className="text-primary inline-flex items-center gap-1" href={s.post_url} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3" />Julkaisu</a>}
                 <Button variant="ghost" size="sm" className="ml-auto" onClick={() => del.mutate(s.id)}><Trash2 className="h-4 w-4" /></Button>
               </div>
             </div>
@@ -51,25 +51,25 @@ function SocialPage() {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl">
-          <DialogHeader><DialogTitle>New social insight</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Uusi somehavainto</DialogTitle></DialogHeader>
           <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2">
             <div className="grid grid-cols-2 gap-3">
-              <R label="Platform"><Input value={draft.platform || ""} onChange={(e) => setDraft({ ...draft, platform: e.target.value })} /></R>
-              <R label="Author"><Input value={draft.author || ""} onChange={(e) => setDraft({ ...draft, author: e.target.value })} /></R>
+              <R label="Alusta"><Input value={draft.platform || ""} onChange={(e) => setDraft({ ...draft, platform: e.target.value })} /></R>
+              <R label="Kirjoittaja"><Input value={draft.author || ""} onChange={(e) => setDraft({ ...draft, author: e.target.value })} /></R>
             </div>
-            <R label="Post URL"><Input value={draft.post_url || ""} onChange={(e) => setDraft({ ...draft, post_url: e.target.value })} /></R>
-            <R label="Topic"><Input value={draft.topic || ""} onChange={(e) => setDraft({ ...draft, topic: e.target.value })} /></R>
-            <R label="Summary"><Textarea rows={3} value={draft.summary || ""} onChange={(e) => setDraft({ ...draft, summary: e.target.value })} /></R>
-            <R label="Main arguments"><Textarea rows={2} value={draft.main_arguments || ""} onChange={(e) => setDraft({ ...draft, main_arguments: e.target.value })} /></R>
-            <R label="Comment analysis"><Textarea rows={2} value={draft.comment_analysis || ""} onChange={(e) => setDraft({ ...draft, comment_analysis: e.target.value })} /></R>
-            <R label="Opportunity"><Textarea rows={2} value={draft.opportunity || ""} onChange={(e) => setDraft({ ...draft, opportunity: e.target.value })} /></R>
-            <R label="Suggested response"><Textarea rows={2} value={draft.suggested_response || ""} onChange={(e) => setDraft({ ...draft, suggested_response: e.target.value })} /></R>
-            <R label="Suggested content idea"><Textarea rows={2} value={draft.suggested_content_idea || ""} onChange={(e) => setDraft({ ...draft, suggested_content_idea: e.target.value })} /></R>
-            <R label="Relevance 1-10"><Input type="number" min={1} max={10} value={draft.relevance_score} onChange={(e) => setDraft({ ...draft, relevance_score: Number(e.target.value) })} /></R>
+            <R label="Julkaisun osoite"><Input value={draft.post_url || ""} onChange={(e) => setDraft({ ...draft, post_url: e.target.value })} /></R>
+            <R label="Aihe"><Input value={draft.topic || ""} onChange={(e) => setDraft({ ...draft, topic: e.target.value })} /></R>
+            <R label="Yhteenveto"><Textarea rows={3} value={draft.summary || ""} onChange={(e) => setDraft({ ...draft, summary: e.target.value })} /></R>
+            <R label="Pääargumentit"><Textarea rows={2} value={draft.main_arguments || ""} onChange={(e) => setDraft({ ...draft, main_arguments: e.target.value })} /></R>
+            <R label="Kommenttianalyysi"><Textarea rows={2} value={draft.comment_analysis || ""} onChange={(e) => setDraft({ ...draft, comment_analysis: e.target.value })} /></R>
+            <R label="Mahdollisuus"><Textarea rows={2} value={draft.opportunity || ""} onChange={(e) => setDraft({ ...draft, opportunity: e.target.value })} /></R>
+            <R label="Ehdotettu vastaus"><Textarea rows={2} value={draft.suggested_response || ""} onChange={(e) => setDraft({ ...draft, suggested_response: e.target.value })} /></R>
+            <R label="Ehdotettu sisältöidea"><Textarea rows={2} value={draft.suggested_content_idea || ""} onChange={(e) => setDraft({ ...draft, suggested_content_idea: e.target.value })} /></R>
+            <R label="Relevanssi 1-10"><Input type="number" min={1} max={10} value={draft.relevance_score} onChange={(e) => setDraft({ ...draft, relevance_score: Number(e.target.value) })} /></R>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={() => upsert.mutate(draft, { onSuccess: () => setOpen(false) })} disabled={upsert.isPending}>Create</Button>
+            <Button variant="ghost" onClick={() => setOpen(false)}>Peruuta</Button>
+            <Button onClick={() => upsert.mutate(draft, { onSuccess: () => setOpen(false) })} disabled={upsert.isPending}>Luo</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

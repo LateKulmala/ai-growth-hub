@@ -22,7 +22,7 @@ function Shell({ children }: { children: React.ReactNode }) {
             <div className="ml-auto flex items-center gap-2 text-xs">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2 py-1">
                 <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--success)] shadow-[0_0_8px_var(--success)]" />
-                Systems nominal
+                Järjestelmät kunnossa
               </span>
             </div>
           </header>
@@ -48,11 +48,11 @@ function ProtectedLayout() {
   return (
     <Shell>
       {ready ? (
-        <Suspense fallback={<div className="text-sm text-muted-foreground">Loading…</div>}>
+        <Suspense fallback={<div className="text-sm text-muted-foreground">Ladataan…</div>}>
           <Outlet />
         </Suspense>
       ) : (
-        <div className="text-sm text-muted-foreground">Authenticating…</div>
+        <div className="text-sm text-muted-foreground">Tunnistaudutaan…</div>
       )}
     </Shell>
   );
