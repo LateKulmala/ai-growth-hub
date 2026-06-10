@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_protected/automation")({
 });
 
 function AutomationPage() {
-  const logs = useSuspenseQuery(listQuery<any>("automation_logs", { order: { column: "started_at", ascending: false } })).data;
+  const logs = useSuspenseQuery(listQuery<any>("automation_logs", { column: "started_at", ascending: false })).data;
   const upsert = useUpsert("automation_logs");
   const del = useDelete("automation_logs");
   const [filter, setFilter] = useState<string>("all");

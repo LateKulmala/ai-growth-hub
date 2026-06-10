@@ -14,7 +14,8 @@ type TableName =
   | "learning_journal"
   | "skills"
   | "score_events"
-  | "telegram_messages";
+  | "telegram_messages"
+  | "automation_logs";
 
 export function listQuery<T = any>(
   table: TableName,

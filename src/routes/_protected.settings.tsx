@@ -158,14 +158,14 @@ function SettingsPage() {
               title="Daily Telegram briefing"
               description="Send the 5-minute briefing to Telegram."
               checked={!!v.daily_telegram_enabled}
-              onChange={(c) => update({ daily_telegram_enabled: c })}
+              onChange={(c: boolean) => update({ daily_telegram_enabled: c })}
             />
             <ToggleRow
               icon={<Bot className="h-4 w-4" />}
               title="Daily experiment generation"
               description="Auto-create today's AI experiment."
               checked={!!v.daily_experiment_enabled}
-              onChange={(c) => update({ daily_experiment_enabled: c })}
+              onChange={(c: boolean) => update({ daily_experiment_enabled: c })}
             />
           </div>
         </div>
