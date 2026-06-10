@@ -58,9 +58,10 @@ function JournalPage() {
         <DialogContent className="max-w-2xl">
           <DialogHeader><DialogTitle>New journal entry</DialogTitle></DialogHeader>
           <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <R label="Date"><Input type="date" value={draft.entry_date || ""} onChange={(e) => setDraft({ ...draft, entry_date: e.target.value })} /></R>
-              <R label="Mood / energy"><Input value={draft.mood || ""} onChange={(e) => setDraft({ ...draft, mood: e.target.value })} /></R>
+              <R label="Mood"><Input value={draft.mood || ""} onChange={(e) => setDraft({ ...draft, mood: e.target.value })} /></R>
+              <R label="Energy (1-10)"><Input type="number" min={1} max={10} value={draft.energy_level ?? ""} onChange={(e) => setDraft({ ...draft, energy_level: e.target.value === "" ? null : Number(e.target.value) })} /></R>
             </div>
             <R label="What I learned"><Textarea rows={2} value={draft.what_i_learned || ""} onChange={(e) => setDraft({ ...draft, what_i_learned: e.target.value })} /></R>
             <R label="What I built"><Textarea rows={2} value={draft.what_i_built || ""} onChange={(e) => setDraft({ ...draft, what_i_built: e.target.value })} /></R>
