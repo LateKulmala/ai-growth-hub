@@ -19,10 +19,10 @@ function AnalyticsPage() {
   const profile = useSuspenseQuery(listQuery<any>("profile")).data[0];
 
   const completed = exps.filter((e) => e.status === "completed");
-  const avg = completed.length ? Math.round(completed.reduce((a, e) => a + (e.score || 0), 0) / completed.length) : 0;
+  const avg = completed.length ? Math.round(completed.reduce((a, e) => a + (e.score_total || 0), 0) / completed.length) : 0;
 
   const scoreSeries = useMemo(
-    () => completed.map((e, i) => ({ name: e.experiment_date, score: e.score ?? 0, idx: i + 1 })),
+    () => completed.map((e, i) => ({ name: e.experiment_date, score_total: e.score_total ?? 0, idx: i + 1 })),
     [completed],
   );
 
@@ -41,8 +41,8 @@ function AnalyticsPage() {
     return Array.from(map.entries()).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([tool, count]) => ({ tool, count }));
   }, [exps]);
 
-  const best = [...completed].sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 5);
-  const weakest = [...completed].filter((e) => e.score != null).sort((a, b) => (a.score || 0) - (b.score || 0)).slice(0, 5);
+  const best = [...completed].sort((a, b) => (b.score_total || 0) - (a.score_total || 0)).slice(0, 5);
+  const weakest = [...completed].filter((e) => e.score_total != null).sort((a, b) => (a.score_total || 0) - (b.score_total || 0)).slice(0, 5);
 
   return (
     <div className="space-y-6">
@@ -100,7 +100,7 @@ function AnalyticsPage() {
             {best.map((e) => (
               <li key={e.id} className="flex items-center justify-between text-sm">
                 <span className="truncate">{e.title}</span>
-                <span className="text-primary font-semibold">{e.score}</span>
+                <span className="text-primary font-semibold">{e.score_total}</span>
               </li>
             ))}
             {best.length === 0 && <li className="text-sm text-muted-foreground">No completed experiments yet.</li>}
@@ -110,7 +110,7 @@ function AnalyticsPage() {
             {weakest.map((e) => (
               <li key={e.id} className="flex items-center justify-between text-sm">
                 <span className="truncate">{e.title}</span>
-                <span className="text-destructive font-semibold">{e.score}</span>
+                <span className="text-destructive font-semibold">{e.score_total}</span>
               </li>
             ))}
             {weakest.length === 0 && <li className="text-sm text-muted-foreground">—</li>}

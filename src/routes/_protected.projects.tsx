@@ -53,7 +53,7 @@ function ProjectsPage() {
               </div>
               <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{p.description}</p>
               <div className="mt-3 flex flex-wrap gap-1.5">
-                {(p.tools || []).slice(0, 4).map((t: string) => <Chip key={t}>{t}</Chip>)}
+                {(p.tools_used || []).slice(0, 4).map((t: string) => <Chip key={t}>{t}</Chip>)}
               </div>
               <div className="mt-3 flex gap-3 text-xs text-muted-foreground">
                 {p.github_url && <span className="inline-flex items-center gap-1"><Github className="h-3 w-3" />GitHub</span>}
@@ -70,8 +70,8 @@ function ProjectsPage() {
           <div className="space-y-3">
             <Row label="Name"><Input value={draft.name || ""} onChange={(e) => setDraft({ ...draft, name: e.target.value })} /></Row>
             <Row label="Description"><Textarea rows={2} value={draft.description || ""} onChange={(e) => setDraft({ ...draft, description: e.target.value })} /></Row>
-            <Row label="Problem it solves"><Textarea rows={2} value={draft.problem || ""} onChange={(e) => setDraft({ ...draft, problem: e.target.value })} /></Row>
-            <Row label="Tools (csv)"><Input value={arrayToCsv(draft.tools)} onChange={(e) => setDraft({ ...draft, tools: csvToArray(e.target.value) })} /></Row>
+            <Row label="Problem it solves"><Textarea rows={2} value={draft.problem_solved || ""} onChange={(e) => setDraft({ ...draft, problem_solved: e.target.value })} /></Row>
+            <Row label="Tools (csv)"><Input value={arrayToCsv(draft.tools_used)} onChange={(e) => setDraft({ ...draft, tools_used: csvToArray(e.target.value) })} /></Row>
             <div className="grid grid-cols-2 gap-3">
               <Row label="Status">
                 <Select value={draft.status || "active"} onValueChange={(v) => setDraft({ ...draft, status: v })}>

@@ -59,7 +59,7 @@ function BriefingsPage() {
             <R label="Executive summary"><Textarea rows={3} value={draft.executive_summary || ""} onChange={(e) => setDraft({ ...draft, executive_summary: e.target.value })} /></R>
             <R label="Hot topics (csv)"><Input value={arrayToCsv(draft.hot_topics)} onChange={(e) => setDraft({ ...draft, hot_topics: csvToArray(e.target.value) })} /></R>
             <R label="Why it matters"><Textarea rows={2} value={draft.why_it_matters || ""} onChange={(e) => setDraft({ ...draft, why_it_matters: e.target.value })} /></R>
-            <R label="What to learn"><Textarea rows={2} value={draft.what_to_learn || ""} onChange={(e) => setDraft({ ...draft, what_to_learn: e.target.value })} /></R>
+            <R label="What to learn"><Textarea rows={2} value={draft.learning_recommendation || ""} onChange={(e) => setDraft({ ...draft, learning_recommendation: e.target.value })} /></R>
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>

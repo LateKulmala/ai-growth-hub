@@ -63,8 +63,8 @@ function SocialPage() {
             <R label="Main arguments"><Textarea rows={2} value={draft.main_arguments || ""} onChange={(e) => setDraft({ ...draft, main_arguments: e.target.value })} /></R>
             <R label="Comment analysis"><Textarea rows={2} value={draft.comment_analysis || ""} onChange={(e) => setDraft({ ...draft, comment_analysis: e.target.value })} /></R>
             <R label="Opportunity"><Textarea rows={2} value={draft.opportunity || ""} onChange={(e) => setDraft({ ...draft, opportunity: e.target.value })} /></R>
-            <R label="Suggested response"><Textarea rows={2} value={draft.response_idea || ""} onChange={(e) => setDraft({ ...draft, response_idea: e.target.value })} /></R>
-            <R label="Suggested content idea"><Textarea rows={2} value={draft.content_idea || ""} onChange={(e) => setDraft({ ...draft, content_idea: e.target.value })} /></R>
+            <R label="Suggested response"><Textarea rows={2} value={draft.suggested_response || ""} onChange={(e) => setDraft({ ...draft, suggested_response: e.target.value })} /></R>
+            <R label="Suggested content idea"><Textarea rows={2} value={draft.suggested_content_idea || ""} onChange={(e) => setDraft({ ...draft, suggested_content_idea: e.target.value })} /></R>
             <R label="Relevance 1-10"><Input type="number" min={1} max={10} value={draft.relevance_score} onChange={(e) => setDraft({ ...draft, relevance_score: Number(e.target.value) })} /></R>
           </div>
           <DialogFooter>

@@ -35,13 +35,13 @@ function JournalPage() {
             <div key={j.id} className="surface-card p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-xs text-primary">{j.entry_date} · {j.mood}</div>
+                  <div className="text-xs text-primary">{j.entry_date} · {j.mood}{j.energy_level != null ? ` · energy ${j.energy_level}/10` : ""}</div>
                   <div className="mt-2 grid gap-2 text-sm md:grid-cols-2">
-                    {j.learned && <P label="Learned">{j.learned}</P>}
-                    {j.built && <P label="Built">{j.built}</P>}
-                    {j.difficult && <P label="Difficult">{j.difficult}</P>}
-                    {j.surprised && <P label="Surprised">{j.surprised}</P>}
-                    {j.improve_next && <P label="Improve next">{j.improve_next}</P>}
+                    {j.what_i_learned && <P label="Learned">{j.what_i_learned}</P>}
+                    {j.what_i_built && <P label="Built">{j.what_i_built}</P>}
+                    {j.what_was_difficult && <P label="Difficult">{j.what_was_difficult}</P>}
+                    {j.what_surprised_me && <P label="Surprised">{j.what_surprised_me}</P>}
+                    {j.next_improvement && <P label="Improve next">{j.next_improvement}</P>}
                   </div>
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {(j.tags || []).map((t: string) => <Chip key={t}>{t}</Chip>)}
@@ -58,15 +58,16 @@ function JournalPage() {
         <DialogContent className="max-w-2xl">
           <DialogHeader><DialogTitle>New journal entry</DialogTitle></DialogHeader>
           <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <R label="Date"><Input type="date" value={draft.entry_date || ""} onChange={(e) => setDraft({ ...draft, entry_date: e.target.value })} /></R>
-              <R label="Mood / energy"><Input value={draft.mood || ""} onChange={(e) => setDraft({ ...draft, mood: e.target.value })} /></R>
+              <R label="Mood"><Input value={draft.mood || ""} onChange={(e) => setDraft({ ...draft, mood: e.target.value })} /></R>
+              <R label="Energy (1-10)"><Input type="number" min={1} max={10} value={draft.energy_level ?? ""} onChange={(e) => setDraft({ ...draft, energy_level: e.target.value === "" ? null : Number(e.target.value) })} /></R>
             </div>
-            <R label="What I learned"><Textarea rows={2} value={draft.learned || ""} onChange={(e) => setDraft({ ...draft, learned: e.target.value })} /></R>
-            <R label="What I built"><Textarea rows={2} value={draft.built || ""} onChange={(e) => setDraft({ ...draft, built: e.target.value })} /></R>
-            <R label="What was difficult"><Textarea rows={2} value={draft.difficult || ""} onChange={(e) => setDraft({ ...draft, difficult: e.target.value })} /></R>
-            <R label="What surprised me"><Textarea rows={2} value={draft.surprised || ""} onChange={(e) => setDraft({ ...draft, surprised: e.target.value })} /></R>
-            <R label="What to improve next"><Textarea rows={2} value={draft.improve_next || ""} onChange={(e) => setDraft({ ...draft, improve_next: e.target.value })} /></R>
+            <R label="What I learned"><Textarea rows={2} value={draft.what_i_learned || ""} onChange={(e) => setDraft({ ...draft, what_i_learned: e.target.value })} /></R>
+            <R label="What I built"><Textarea rows={2} value={draft.what_i_built || ""} onChange={(e) => setDraft({ ...draft, what_i_built: e.target.value })} /></R>
+            <R label="What was difficult"><Textarea rows={2} value={draft.what_was_difficult || ""} onChange={(e) => setDraft({ ...draft, what_was_difficult: e.target.value })} /></R>
+            <R label="What surprised me"><Textarea rows={2} value={draft.what_surprised_me || ""} onChange={(e) => setDraft({ ...draft, what_surprised_me: e.target.value })} /></R>
+            <R label="What to improve next"><Textarea rows={2} value={draft.next_improvement || ""} onChange={(e) => setDraft({ ...draft, next_improvement: e.target.value })} /></R>
             <R label="Tags (csv)"><Input value={arrayToCsv(draft.tags)} onChange={(e) => setDraft({ ...draft, tags: csvToArray(e.target.value) })} /></R>
           </div>
           <DialogFooter>

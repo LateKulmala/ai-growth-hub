@@ -46,7 +46,7 @@ function BriefingDetail() {
         <F label="Hot topics (csv)"><Input value={arrayToCsv(v.hot_topics)} onChange={(e) => setF({ ...v, hot_topics: csvToArray(e.target.value) })} /></F>
         <div className="flex flex-wrap gap-1.5">{(v.hot_topics || []).map((t: string) => <Chip key={t}>{t}</Chip>)}</div>
         <F label="Why it matters"><Textarea rows={3} value={v.why_it_matters || ""} onChange={(e) => setF({ ...v, why_it_matters: e.target.value })} /></F>
-        <F label="What to learn"><Textarea rows={3} value={v.what_to_learn || ""} onChange={(e) => setF({ ...v, what_to_learn: e.target.value })} /></F>
+        <F label="What to learn"><Textarea rows={3} value={v.learning_recommendation || ""} onChange={(e) => setF({ ...v, learning_recommendation: e.target.value })} /></F>
         <div className="flex items-center gap-3">
           <Switch checked={!!v.telegram_sent} onCheckedChange={(c) => setF({ ...v, telegram_sent: c })} />
           <Label>Telegram sent</Label>

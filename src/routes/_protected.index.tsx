@@ -24,7 +24,7 @@ function Dashboard() {
   const todayBrief = briefings[0];
   const completed = experiments.filter((e) => e.status === "completed");
   const avgScore = completed.length
-    ? Math.round(completed.reduce((a, e) => a + (e.score || 0), 0) / completed.length)
+    ? Math.round(completed.reduce((a, e) => a + (e.score_total || 0), 0) / completed.length)
     : 0;
 
   return (
@@ -54,10 +54,10 @@ function Dashboard() {
           </div>
           {todayExp ? (
             <>
-              <p className="mt-3 text-sm text-muted-foreground line-clamp-3">{todayExp.task || todayExp.background}</p>
+              <p className="mt-3 text-sm text-muted-foreground line-clamp-3">{todayExp.task_description || todayExp.background_context}</p>
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <span className="text-xs text-muted-foreground">Difficulty {todayExp.difficulty}/10</span>
-                <span className="text-xs text-muted-foreground">· {todayExp.estimated_time || "—"}</span>
+                <span className="text-xs text-muted-foreground">· {todayExp.estimated_time_minutes || "—"}</span>
                 <Button asChild size="sm" className="ml-auto">
                   <Link to="/experiments/$id" params={{ id: todayExp.id }}>Open experiment</Link>
                 </Button>

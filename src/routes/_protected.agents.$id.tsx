@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_protected/agents/$id")({
 function AgentDetail() {
   const { id } = Route.useParams();
   const a = useSuspenseQuery(rowQuery<any>("agents", id)).data;
-  const runs = useSuspenseQuery(listQuery<any>("agent_runs", { column: "ran_at" })).data.filter((r: any) => r.agent_id === id);
+  const runs = useSuspenseQuery(listQuery<any>("agent_runs", { column: "started_at" })).data.filter((r: any) => r.agent_id === id);
   const upsert = useUpsert("agents");
   const del = useDelete("agents");
   const nav = useNavigate();
@@ -40,7 +40,7 @@ function AgentDetail() {
 
       <div className="surface-card p-6 space-y-4">
         <div className="flex items-center gap-3"><StatusBadge status={v.status} />
-          {v.n8n_url && <a className="text-xs text-primary inline-flex items-center gap-1" href={v.n8n_url} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3" />n8n workflow</a>}
+          {v.n8n_workflow_url && <a className="text-xs text-primary inline-flex items-center gap-1" href={v.n8n_workflow_url} target="_blank" rel="noreferrer"><ExternalLink className="h-3 w-3" />n8n workflow</a>}
         </div>
         <div className="grid sm:grid-cols-2 gap-4">
           <F label="Name"><Input value={v.name || ""} onChange={(e) => setF({ ...v, name: e.target.value })} /></F>
@@ -68,16 +68,16 @@ function AgentDetail() {
             </Select>
           </F>
           <F label="Success rate (0–1)"><Input type="number" step="0.01" min={0} max={1} value={v.success_rate ?? 0} onChange={(e) => setF({ ...v, success_rate: Number(e.target.value) })} /></F>
-          <F label="n8n URL"><Input value={v.n8n_url || ""} onChange={(e) => setF({ ...v, n8n_url: e.target.value })} /></F>
+          <F label="n8n URL"><Input value={v.n8n_workflow_url || ""} onChange={(e) => setF({ ...v, n8n_workflow_url: e.target.value })} /></F>
         </div>
         <F label="Description"><Textarea rows={3} value={v.description || ""} onChange={(e) => setF({ ...v, description: e.target.value })} /></F>
-        <F label="Input"><Textarea rows={2} value={v.input || ""} onChange={(e) => setF({ ...v, input: e.target.value })} /></F>
-        <F label="Output"><Textarea rows={2} value={v.output || ""} onChange={(e) => setF({ ...v, output: e.target.value })} /></F>
-        <F label="Tools (csv)"><Input value={arrayToCsv(v.tools)} onChange={(e) => setF({ ...v, tools: csvToArray(e.target.value) })} /></F>
-        <div className="flex flex-wrap gap-1.5">{(v.tools || []).map((t: string) => <Chip key={t}>{t}</Chip>)}</div>
+        <F label="Input"><Textarea rows={2} value={v.input_description || ""} onChange={(e) => setF({ ...v, input_description: e.target.value })} /></F>
+        <F label="Output"><Textarea rows={2} value={v.output_description || ""} onChange={(e) => setF({ ...v, output_description: e.target.value })} /></F>
+        <F label="Tools (csv)"><Input value={arrayToCsv(v.tools_used)} onChange={(e) => setF({ ...v, tools_used: csvToArray(e.target.value) })} /></F>
+        <div className="flex flex-wrap gap-1.5">{(v.tools_used || []).map((t: string) => <Chip key={t}>{t}</Chip>)}</div>
         <F label="Notes"><Textarea rows={3} value={v.notes || ""} onChange={(e) => setF({ ...v, notes: e.target.value })} /></F>
         <F label="Improvement ideas"><Textarea rows={3} value={v.improvement_ideas || ""} onChange={(e) => setF({ ...v, improvement_ideas: e.target.value })} /></F>
-        <div className="text-xs text-muted-foreground">Last run {v.last_run ? new Date(v.last_run).toLocaleString() : "never"}</div>
+        <div className="text-xs text-muted-foreground">Last run {v.last_run_at ? new Date(v.last_run_at).toLocaleString() : "never"}</div>
       </div>
 
       <div className="surface-card p-6">
@@ -86,9 +86,9 @@ function AgentDetail() {
           <div className="space-y-2">
             {runs.slice(0, 10).map((r: any) => (
               <div key={r.id} className="flex items-center justify-between rounded-lg border border-border bg-surface/40 px-3 py-2 text-sm">
-                <div>{new Date(r.ran_at).toLocaleString()}</div>
+                <div>{new Date(r.started_at).toLocaleString()}</div>
                 <div className="flex items-center gap-3">
-                  {r.duration_ms != null && <span className="text-xs text-muted-foreground">{r.duration_ms}ms</span>}
+                  {r.duration_seconds != null && <span className="text-xs text-muted-foreground">{r.duration_seconds}s</span>}
                   <StatusBadge status={r.status} />
                 </div>
               </div>

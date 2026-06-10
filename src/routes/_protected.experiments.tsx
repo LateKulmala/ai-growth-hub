@@ -39,10 +39,10 @@ function ExperimentsPage() {
                   <h3 className="font-display text-lg font-semibold mt-1">{e.title}</h3>
                 </div>
                 <div className="shrink-0">
-                  {e.score != null ? <ScoreRing value={e.score} size={48} /> : <StatusBadge status={e.status} />}
+                  {e.score_total != null ? <ScoreRing value={e.score_total} size={48} /> : <StatusBadge status={e.status} />}
                 </div>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{e.task || e.background}</p>
+              <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{e.task_description || e.background_context}</p>
               <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
                 <span>Difficulty {e.difficulty}/10</span>
                 <StatusBadge status={e.status} />
@@ -66,7 +66,7 @@ function ExperimentsPage() {
             <R label="Title"><Input value={draft.title || ""} onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></R>
             <div className="grid grid-cols-3 gap-3">
               <R label="Difficulty 1-10"><Input type="number" min={1} max={10} value={draft.difficulty || 5} onChange={(e) => setDraft({ ...draft, difficulty: Number(e.target.value) })} /></R>
-              <R label="Estimated time"><Input value={draft.estimated_time || ""} onChange={(e) => setDraft({ ...draft, estimated_time: e.target.value })} /></R>
+              <R label="Estimated time (minutes)"><Input type="number" min={0} value={draft.estimated_time_minutes ?? ""} onChange={(e) => setDraft({ ...draft, estimated_time_minutes: e.target.value === "" ? null : Number(e.target.value) })} /></R>
               <R label="Status">
                 <Select value={draft.status} onValueChange={(v) => setDraft({ ...draft, status: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
@@ -80,9 +80,9 @@ function ExperimentsPage() {
               </R>
             </div>
             <R label="Tools needed (csv)"><Input value={arrayToCsv(draft.tools_needed)} onChange={(e) => setDraft({ ...draft, tools_needed: csvToArray(e.target.value) })} /></R>
-            <R label="Background"><Textarea rows={2} value={draft.background || ""} onChange={(e) => setDraft({ ...draft, background: e.target.value })} /></R>
-            <R label="Task"><Textarea rows={2} value={draft.task || ""} onChange={(e) => setDraft({ ...draft, task: e.target.value })} /></R>
-            <R label="Step-by-step instructions"><Textarea rows={4} value={draft.instructions || ""} onChange={(e) => setDraft({ ...draft, instructions: e.target.value })} /></R>
+            <R label="Background"><Textarea rows={2} value={draft.background_context || ""} onChange={(e) => setDraft({ ...draft, background_context: e.target.value })} /></R>
+            <R label="Task"><Textarea rows={2} value={draft.task_description || ""} onChange={(e) => setDraft({ ...draft, task_description: e.target.value })} /></R>
+            <R label="Step-by-step instructions"><Textarea rows={4} value={draft.step_by_step_instructions || ""} onChange={(e) => setDraft({ ...draft, step_by_step_instructions: e.target.value })} /></R>
             <R label="Success criteria"><Textarea rows={2} value={draft.success_criteria || ""} onChange={(e) => setDraft({ ...draft, success_criteria: e.target.value })} /></R>
           </div>
           <DialogFooter>
