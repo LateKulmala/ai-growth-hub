@@ -147,9 +147,14 @@ function Dashboard() {
             }))}
           />
           <RecentList
-            title="AI-uutiset"
+            title="Uutiset ja oppitunnit"
             icon={<Newspaper className="h-4 w-4 text-muted-foreground" />}
-            rows={news.slice(0, 5).map((n: any) => ({ id: n.id, title: n.title, meta: n.source, href: n.url }))}
+            rows={news.slice(0, 5).map((n: any) => ({
+              id: n.id,
+              title: n.title,
+              meta: n.kind === "lesson" ? `Oppitunti · ${n.category || ""}` : n.source,
+              to: `/news/${n.id}`,
+            }))}
           />
           <RecentList
             title="Päiväbriefingit"

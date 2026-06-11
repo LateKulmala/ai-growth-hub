@@ -145,9 +145,11 @@ export type Database = {
       ai_news: {
         Row: {
           category: string | null
+          content: string | null
           created_at: string
           discovered_at: string
           id: string
+          kind: string
           related_briefing_id: string | null
           relevance_score: number | null
           source: string | null
@@ -160,9 +162,11 @@ export type Database = {
         }
         Insert: {
           category?: string | null
+          content?: string | null
           created_at?: string
           discovered_at?: string
           id?: string
+          kind?: string
           related_briefing_id?: string | null
           relevance_score?: number | null
           source?: string | null
@@ -175,9 +179,11 @@ export type Database = {
         }
         Update: {
           category?: string | null
+          content?: string | null
           created_at?: string
           discovered_at?: string
           id?: string
+          kind?: string
           related_briefing_id?: string | null
           relevance_score?: number | null
           source?: string | null

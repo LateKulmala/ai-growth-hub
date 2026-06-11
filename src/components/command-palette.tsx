@@ -12,7 +12,6 @@ import {
   LineChart,
   Zap,
   Settings,
-  ExternalLink,
 } from "lucide-react";
 import {
   CommandDialog,
@@ -153,19 +152,16 @@ export function CommandPalette() {
         )}
 
         {news.length > 0 && (
-          <CommandGroup heading="Uutiset">
-            {news.slice(0, 20).map((n: any) => (
+          <CommandGroup heading="Uutiset ja oppitunnit">
+            {news.slice(0, 25).map((n: any) => (
               <CommandItem
                 key={n.id}
-                value={`uutinen ${n.title} ${n.source ?? ""}`}
-                onSelect={() =>
-                  go(() => {
-                    if (n.url) window.open(n.url, "_blank", "noopener,noreferrer");
-                    else navigate({ to: "/news" });
-                  })
-                }
+                value={`${n.kind === "lesson" ? "oppitunti" : "uutinen"} ${n.title} ${n.source ?? ""} ${n.category ?? ""}`}
+                onSelect={() => go(() => navigate({ to: "/news/$id", params: { id: n.id } }))}
               >
-                <ExternalLink className="mr-2 h-4 w-4 text-muted-foreground" />
+                {n.kind === "lesson"
+                  ? <BookOpen className="mr-2 h-4 w-4 text-muted-foreground" />
+                  : <Newspaper className="mr-2 h-4 w-4 text-muted-foreground" />}
                 <span className="truncate">{n.title}</span>
                 {n.source && <span className="ml-2 shrink-0 text-xs text-muted-foreground">{n.source}</span>}
               </CommandItem>

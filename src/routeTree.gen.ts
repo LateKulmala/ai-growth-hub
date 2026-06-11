@@ -22,6 +22,7 @@ import { Route as ProtectedAutomationRouteImport } from './routes/_protected.aut
 import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected.analytics'
 import { Route as ProtectedAgentsRouteImport } from './routes/_protected.agents'
 import { Route as ProtectedProjectsIdRouteImport } from './routes/_protected.projects.$id'
+import { Route as ProtectedNewsIdRouteImport } from './routes/_protected.news.$id'
 import { Route as ProtectedExperimentsIdRouteImport } from './routes/_protected.experiments.$id'
 import { Route as ProtectedBriefingsIdRouteImport } from './routes/_protected.briefings.$id'
 import { Route as ProtectedAgentsIdRouteImport } from './routes/_protected.agents.$id'
@@ -90,6 +91,11 @@ const ProtectedProjectsIdRoute = ProtectedProjectsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ProtectedProjectsRoute,
 } as any)
+const ProtectedNewsIdRoute = ProtectedNewsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProtectedNewsRoute,
+} as any)
 const ProtectedExperimentsIdRoute = ProtectedExperimentsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -114,13 +120,14 @@ export interface FileRoutesByFullPath {
   '/automation': typeof ProtectedAutomationRoute
   '/experiments': typeof ProtectedExperimentsRouteWithChildren
   '/journal': typeof ProtectedJournalRoute
-  '/news': typeof ProtectedNewsRoute
+  '/news': typeof ProtectedNewsRouteWithChildren
   '/portfolio': typeof ProtectedPortfolioRoute
   '/projects': typeof ProtectedProjectsRouteWithChildren
   '/settings': typeof ProtectedSettingsRoute
   '/agents/$id': typeof ProtectedAgentsIdRoute
   '/briefings/$id': typeof ProtectedBriefingsIdRoute
   '/experiments/$id': typeof ProtectedExperimentsIdRoute
+  '/news/$id': typeof ProtectedNewsIdRoute
   '/projects/$id': typeof ProtectedProjectsIdRoute
 }
 export interface FileRoutesByTo {
@@ -130,7 +137,7 @@ export interface FileRoutesByTo {
   '/automation': typeof ProtectedAutomationRoute
   '/experiments': typeof ProtectedExperimentsRouteWithChildren
   '/journal': typeof ProtectedJournalRoute
-  '/news': typeof ProtectedNewsRoute
+  '/news': typeof ProtectedNewsRouteWithChildren
   '/portfolio': typeof ProtectedPortfolioRoute
   '/projects': typeof ProtectedProjectsRouteWithChildren
   '/settings': typeof ProtectedSettingsRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/agents/$id': typeof ProtectedAgentsIdRoute
   '/briefings/$id': typeof ProtectedBriefingsIdRoute
   '/experiments/$id': typeof ProtectedExperimentsIdRoute
+  '/news/$id': typeof ProtectedNewsIdRoute
   '/projects/$id': typeof ProtectedProjectsIdRoute
 }
 export interface FileRoutesById {
@@ -149,7 +157,7 @@ export interface FileRoutesById {
   '/_protected/automation': typeof ProtectedAutomationRoute
   '/_protected/experiments': typeof ProtectedExperimentsRouteWithChildren
   '/_protected/journal': typeof ProtectedJournalRoute
-  '/_protected/news': typeof ProtectedNewsRoute
+  '/_protected/news': typeof ProtectedNewsRouteWithChildren
   '/_protected/portfolio': typeof ProtectedPortfolioRoute
   '/_protected/projects': typeof ProtectedProjectsRouteWithChildren
   '/_protected/settings': typeof ProtectedSettingsRoute
@@ -157,6 +165,7 @@ export interface FileRoutesById {
   '/_protected/agents/$id': typeof ProtectedAgentsIdRoute
   '/_protected/briefings/$id': typeof ProtectedBriefingsIdRoute
   '/_protected/experiments/$id': typeof ProtectedExperimentsIdRoute
+  '/_protected/news/$id': typeof ProtectedNewsIdRoute
   '/_protected/projects/$id': typeof ProtectedProjectsIdRoute
 }
 export interface FileRouteTypes {
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/agents/$id'
     | '/briefings/$id'
     | '/experiments/$id'
+    | '/news/$id'
     | '/projects/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
     | '/agents/$id'
     | '/briefings/$id'
     | '/experiments/$id'
+    | '/news/$id'
     | '/projects/$id'
   id:
     | '__root__'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/_protected/agents/$id'
     | '/_protected/briefings/$id'
     | '/_protected/experiments/$id'
+    | '/_protected/news/$id'
     | '/_protected/projects/$id'
   fileRoutesById: FileRoutesById
 }
@@ -312,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedProjectsIdRouteImport
       parentRoute: typeof ProtectedProjectsRoute
     }
+    '/_protected/news/$id': {
+      id: '/_protected/news/$id'
+      path: '/$id'
+      fullPath: '/news/$id'
+      preLoaderRoute: typeof ProtectedNewsIdRouteImport
+      parentRoute: typeof ProtectedNewsRoute
+    }
     '/_protected/experiments/$id': {
       id: '/_protected/experiments/$id'
       path: '/$id'
@@ -359,6 +378,18 @@ const ProtectedExperimentsRouteChildren: ProtectedExperimentsRouteChildren = {
 const ProtectedExperimentsRouteWithChildren =
   ProtectedExperimentsRoute._addFileChildren(ProtectedExperimentsRouteChildren)
 
+interface ProtectedNewsRouteChildren {
+  ProtectedNewsIdRoute: typeof ProtectedNewsIdRoute
+}
+
+const ProtectedNewsRouteChildren: ProtectedNewsRouteChildren = {
+  ProtectedNewsIdRoute: ProtectedNewsIdRoute,
+}
+
+const ProtectedNewsRouteWithChildren = ProtectedNewsRoute._addFileChildren(
+  ProtectedNewsRouteChildren,
+)
+
 interface ProtectedProjectsRouteChildren {
   ProtectedProjectsIdRoute: typeof ProtectedProjectsIdRoute
 }
@@ -376,7 +407,7 @@ interface ProtectedRouteChildren {
   ProtectedAutomationRoute: typeof ProtectedAutomationRoute
   ProtectedExperimentsRoute: typeof ProtectedExperimentsRouteWithChildren
   ProtectedJournalRoute: typeof ProtectedJournalRoute
-  ProtectedNewsRoute: typeof ProtectedNewsRoute
+  ProtectedNewsRoute: typeof ProtectedNewsRouteWithChildren
   ProtectedPortfolioRoute: typeof ProtectedPortfolioRoute
   ProtectedProjectsRoute: typeof ProtectedProjectsRouteWithChildren
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
@@ -390,7 +421,7 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAutomationRoute: ProtectedAutomationRoute,
   ProtectedExperimentsRoute: ProtectedExperimentsRouteWithChildren,
   ProtectedJournalRoute: ProtectedJournalRoute,
-  ProtectedNewsRoute: ProtectedNewsRoute,
+  ProtectedNewsRoute: ProtectedNewsRouteWithChildren,
   ProtectedPortfolioRoute: ProtectedPortfolioRoute,
   ProtectedProjectsRoute: ProtectedProjectsRouteWithChildren,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
