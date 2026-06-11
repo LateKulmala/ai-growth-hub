@@ -6,8 +6,6 @@ import {
   Bot,
   Newspaper,
   FlaskConical,
-  Radio,
-  MessagesSquare,
   BookOpen,
   LineChart,
   Settings,
@@ -50,9 +48,7 @@ const sections = [
   {
     label: "Tieto",
     items: [
-      { title: "Päiväbriefingit", url: "/briefings", icon: Newspaper },
-      { title: "Uutiset ja trendit", url: "/news", icon: Radio },
-      { title: "Somehavainnot", url: "/social", icon: MessagesSquare },
+      { title: "Uutiset ja briefingit", url: "/news", icon: Newspaper },
     ],
   },
   {

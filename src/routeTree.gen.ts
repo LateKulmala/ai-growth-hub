@@ -12,14 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as ProtectedIndexRouteImport } from './routes/_protected.index'
-import { Route as ProtectedSocialRouteImport } from './routes/_protected.social'
 import { Route as ProtectedSettingsRouteImport } from './routes/_protected.settings'
 import { Route as ProtectedProjectsRouteImport } from './routes/_protected.projects'
 import { Route as ProtectedPortfolioRouteImport } from './routes/_protected.portfolio'
 import { Route as ProtectedNewsRouteImport } from './routes/_protected.news'
 import { Route as ProtectedJournalRouteImport } from './routes/_protected.journal'
 import { Route as ProtectedExperimentsRouteImport } from './routes/_protected.experiments'
-import { Route as ProtectedBriefingsRouteImport } from './routes/_protected.briefings'
 import { Route as ProtectedAutomationRouteImport } from './routes/_protected.automation'
 import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected.analytics'
 import { Route as ProtectedAgentsRouteImport } from './routes/_protected.agents'
@@ -40,11 +38,6 @@ const ProtectedRoute = ProtectedRouteImport.update({
 const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedSocialRoute = ProtectedSocialRouteImport.update({
-  id: '/social',
-  path: '/social',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
@@ -77,11 +70,6 @@ const ProtectedExperimentsRoute = ProtectedExperimentsRouteImport.update({
   path: '/experiments',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedBriefingsRoute = ProtectedBriefingsRouteImport.update({
-  id: '/briefings',
-  path: '/briefings',
-  getParentRoute: () => ProtectedRoute,
-} as any)
 const ProtectedAutomationRoute = ProtectedAutomationRouteImport.update({
   id: '/automation',
   path: '/automation',
@@ -108,9 +96,9 @@ const ProtectedExperimentsIdRoute = ProtectedExperimentsIdRouteImport.update({
   getParentRoute: () => ProtectedExperimentsRoute,
 } as any)
 const ProtectedBriefingsIdRoute = ProtectedBriefingsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ProtectedBriefingsRoute,
+  id: '/briefings/$id',
+  path: '/briefings/$id',
+  getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedAgentsIdRoute = ProtectedAgentsIdRouteImport.update({
   id: '/$id',
@@ -124,14 +112,12 @@ export interface FileRoutesByFullPath {
   '/agents': typeof ProtectedAgentsRouteWithChildren
   '/analytics': typeof ProtectedAnalyticsRoute
   '/automation': typeof ProtectedAutomationRoute
-  '/briefings': typeof ProtectedBriefingsRouteWithChildren
   '/experiments': typeof ProtectedExperimentsRouteWithChildren
   '/journal': typeof ProtectedJournalRoute
   '/news': typeof ProtectedNewsRoute
   '/portfolio': typeof ProtectedPortfolioRoute
   '/projects': typeof ProtectedProjectsRouteWithChildren
   '/settings': typeof ProtectedSettingsRoute
-  '/social': typeof ProtectedSocialRoute
   '/agents/$id': typeof ProtectedAgentsIdRoute
   '/briefings/$id': typeof ProtectedBriefingsIdRoute
   '/experiments/$id': typeof ProtectedExperimentsIdRoute
@@ -142,14 +128,12 @@ export interface FileRoutesByTo {
   '/agents': typeof ProtectedAgentsRouteWithChildren
   '/analytics': typeof ProtectedAnalyticsRoute
   '/automation': typeof ProtectedAutomationRoute
-  '/briefings': typeof ProtectedBriefingsRouteWithChildren
   '/experiments': typeof ProtectedExperimentsRouteWithChildren
   '/journal': typeof ProtectedJournalRoute
   '/news': typeof ProtectedNewsRoute
   '/portfolio': typeof ProtectedPortfolioRoute
   '/projects': typeof ProtectedProjectsRouteWithChildren
   '/settings': typeof ProtectedSettingsRoute
-  '/social': typeof ProtectedSocialRoute
   '/': typeof ProtectedIndexRoute
   '/agents/$id': typeof ProtectedAgentsIdRoute
   '/briefings/$id': typeof ProtectedBriefingsIdRoute
@@ -163,14 +147,12 @@ export interface FileRoutesById {
   '/_protected/agents': typeof ProtectedAgentsRouteWithChildren
   '/_protected/analytics': typeof ProtectedAnalyticsRoute
   '/_protected/automation': typeof ProtectedAutomationRoute
-  '/_protected/briefings': typeof ProtectedBriefingsRouteWithChildren
   '/_protected/experiments': typeof ProtectedExperimentsRouteWithChildren
   '/_protected/journal': typeof ProtectedJournalRoute
   '/_protected/news': typeof ProtectedNewsRoute
   '/_protected/portfolio': typeof ProtectedPortfolioRoute
   '/_protected/projects': typeof ProtectedProjectsRouteWithChildren
   '/_protected/settings': typeof ProtectedSettingsRoute
-  '/_protected/social': typeof ProtectedSocialRoute
   '/_protected/': typeof ProtectedIndexRoute
   '/_protected/agents/$id': typeof ProtectedAgentsIdRoute
   '/_protected/briefings/$id': typeof ProtectedBriefingsIdRoute
@@ -185,14 +167,12 @@ export interface FileRouteTypes {
     | '/agents'
     | '/analytics'
     | '/automation'
-    | '/briefings'
     | '/experiments'
     | '/journal'
     | '/news'
     | '/portfolio'
     | '/projects'
     | '/settings'
-    | '/social'
     | '/agents/$id'
     | '/briefings/$id'
     | '/experiments/$id'
@@ -203,14 +183,12 @@ export interface FileRouteTypes {
     | '/agents'
     | '/analytics'
     | '/automation'
-    | '/briefings'
     | '/experiments'
     | '/journal'
     | '/news'
     | '/portfolio'
     | '/projects'
     | '/settings'
-    | '/social'
     | '/'
     | '/agents/$id'
     | '/briefings/$id'
@@ -223,14 +201,12 @@ export interface FileRouteTypes {
     | '/_protected/agents'
     | '/_protected/analytics'
     | '/_protected/automation'
-    | '/_protected/briefings'
     | '/_protected/experiments'
     | '/_protected/journal'
     | '/_protected/news'
     | '/_protected/portfolio'
     | '/_protected/projects'
     | '/_protected/settings'
-    | '/_protected/social'
     | '/_protected/'
     | '/_protected/agents/$id'
     | '/_protected/briefings/$id'
@@ -264,13 +240,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof ProtectedIndexRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/social': {
-      id: '/_protected/social'
-      path: '/social'
-      fullPath: '/social'
-      preLoaderRoute: typeof ProtectedSocialRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/settings': {
@@ -315,13 +284,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedExperimentsRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/briefings': {
-      id: '/_protected/briefings'
-      path: '/briefings'
-      fullPath: '/briefings'
-      preLoaderRoute: typeof ProtectedBriefingsRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/automation': {
       id: '/_protected/automation'
       path: '/automation'
@@ -359,10 +321,10 @@ declare module '@tanstack/react-router' {
     }
     '/_protected/briefings/$id': {
       id: '/_protected/briefings/$id'
-      path: '/$id'
+      path: '/briefings/$id'
       fullPath: '/briefings/$id'
       preLoaderRoute: typeof ProtectedBriefingsIdRouteImport
-      parentRoute: typeof ProtectedBriefingsRoute
+      parentRoute: typeof ProtectedRoute
     }
     '/_protected/agents/$id': {
       id: '/_protected/agents/$id'
@@ -385,17 +347,6 @@ const ProtectedAgentsRouteChildren: ProtectedAgentsRouteChildren = {
 const ProtectedAgentsRouteWithChildren = ProtectedAgentsRoute._addFileChildren(
   ProtectedAgentsRouteChildren,
 )
-
-interface ProtectedBriefingsRouteChildren {
-  ProtectedBriefingsIdRoute: typeof ProtectedBriefingsIdRoute
-}
-
-const ProtectedBriefingsRouteChildren: ProtectedBriefingsRouteChildren = {
-  ProtectedBriefingsIdRoute: ProtectedBriefingsIdRoute,
-}
-
-const ProtectedBriefingsRouteWithChildren =
-  ProtectedBriefingsRoute._addFileChildren(ProtectedBriefingsRouteChildren)
 
 interface ProtectedExperimentsRouteChildren {
   ProtectedExperimentsIdRoute: typeof ProtectedExperimentsIdRoute
@@ -423,30 +374,28 @@ interface ProtectedRouteChildren {
   ProtectedAgentsRoute: typeof ProtectedAgentsRouteWithChildren
   ProtectedAnalyticsRoute: typeof ProtectedAnalyticsRoute
   ProtectedAutomationRoute: typeof ProtectedAutomationRoute
-  ProtectedBriefingsRoute: typeof ProtectedBriefingsRouteWithChildren
   ProtectedExperimentsRoute: typeof ProtectedExperimentsRouteWithChildren
   ProtectedJournalRoute: typeof ProtectedJournalRoute
   ProtectedNewsRoute: typeof ProtectedNewsRoute
   ProtectedPortfolioRoute: typeof ProtectedPortfolioRoute
   ProtectedProjectsRoute: typeof ProtectedProjectsRouteWithChildren
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
-  ProtectedSocialRoute: typeof ProtectedSocialRoute
   ProtectedIndexRoute: typeof ProtectedIndexRoute
+  ProtectedBriefingsIdRoute: typeof ProtectedBriefingsIdRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAgentsRoute: ProtectedAgentsRouteWithChildren,
   ProtectedAnalyticsRoute: ProtectedAnalyticsRoute,
   ProtectedAutomationRoute: ProtectedAutomationRoute,
-  ProtectedBriefingsRoute: ProtectedBriefingsRouteWithChildren,
   ProtectedExperimentsRoute: ProtectedExperimentsRouteWithChildren,
   ProtectedJournalRoute: ProtectedJournalRoute,
   ProtectedNewsRoute: ProtectedNewsRoute,
   ProtectedPortfolioRoute: ProtectedPortfolioRoute,
   ProtectedProjectsRoute: ProtectedProjectsRouteWithChildren,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
-  ProtectedSocialRoute: ProtectedSocialRoute,
   ProtectedIndexRoute: ProtectedIndexRoute,
+  ProtectedBriefingsIdRoute: ProtectedBriefingsIdRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
@@ -460,13 +409,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

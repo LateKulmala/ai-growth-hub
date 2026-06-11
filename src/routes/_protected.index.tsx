@@ -7,7 +7,6 @@ import {
   Activity,
   Trophy,
   Flame,
-  Zap,
   Sparkles,
   Play,
   CheckCircle2,
@@ -35,7 +34,6 @@ function Dashboard() {
   const experiments = useSuspenseQuery(listQuery<any>("experiments", { column: "experiment_date" })).data;
   const briefings = useSuspenseQuery(listQuery<any>("daily_briefings", { column: "briefing_date" })).data;
   const news = useSuspenseQuery(listQuery<any>("ai_news", { column: "discovered_at" })).data;
-  const social = useSuspenseQuery(listQuery<any>("social_insights", { column: "discovered_at" })).data;
   const journal = useSuspenseQuery(listQuery<any>("learning_journal", { column: "entry_date" })).data;
   const agents = useSuspenseQuery(listQuery<any>("agents")).data;
   const scoreEvents = useSuspenseQuery(listQuery<any>("score_events", { column: "event_date" })).data;
@@ -154,13 +152,13 @@ function Dashboard() {
             rows={news.slice(0, 5).map((n: any) => ({ id: n.id, title: n.title, meta: n.source, href: n.url }))}
           />
           <RecentList
-            title="Somehavainnot"
-            icon={<Zap className="h-4 w-4 text-muted-foreground" />}
-            rows={social.slice(0, 5).map((s: any) => ({
-              id: s.id,
-              title: s.topic || s.summary?.slice(0, 60) || "(havainto)",
-              meta: s.platform,
-              href: s.post_url,
+            title="Päiväbriefingit"
+            icon={<Newspaper className="h-4 w-4 text-muted-foreground" />}
+            rows={briefings.slice(0, 5).map((b: any) => ({
+              id: b.id,
+              title: b.title,
+              meta: b.briefing_date,
+              to: `/briefings/${b.id}`,
             }))}
           />
         </div>

@@ -30,7 +30,7 @@ function BriefingDetail() {
 
   return (
     <div className="space-y-6">
-      <Button asChild variant="ghost" size="sm"><Link to="/briefings"><ArrowLeft className="h-4 w-4 mr-1" />Briefingit</Link></Button>
+      <Button asChild variant="ghost" size="sm"><Link to="/news"><ArrowLeft className="h-4 w-4 mr-1" />Uutiset ja briefingit</Link></Button>
       <PageHeader title={v.title} description={v.briefing_date}
         actions={<>
           <Button variant="destructive" size="sm" onClick={() => del.mutate(b.id, { onSuccess: () => nav({ to: "/briefings" }) })}><Trash2 className="h-4 w-4" /></Button>
