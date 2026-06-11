@@ -1,73 +1,40 @@
-## AI Growth OS — Build Plan
+## Tavoite
 
-A private, single-user AI learning operating system with a dark, futuristic "command center" feel. Built on TanStack Start + Supabase, ready for GitHub sync and future n8n integrations.
+Lisätä Supabaseen tarkalleen käyttäjän antama sisältö (profiili, taidot, projektit, agentit, oppimispäiväkirja, AI-opit) suomeksi. Ei keksitä mitään lisää, ei täytetä tyhjää.
 
-### 1. Authentication (MVP)
-- Simple password-gated access stored in `localStorage` (single-user, private).
-- Password lives in a `VITE_APP_PASSWORD` env var (default placeholder for now).
-- Designed so we can swap in Supabase Auth later without rewriting routes.
-- A pathless `_protected` layout enforces the gate; `/login` is public.
+## Toteutustapa
 
-> Note: Because there's no real auth user yet, all Supabase tables will be **single-user / open-read-write** with RLS allowing the `anon` role full access. When we upgrade to Supabase Auth later, we'll tighten policies to `auth.uid()`.
+Käytetään `supabase--insert`-työkalua suoraan — yksi SQL-skripti per taulu. **Ei** rakenneta seed-nappia eikä `scripts/seed-data.ts`-tiedostoa, koska se on kertaluonteinen datansyöttö ja sovelluksessa on jo täysi CRUD jolla dataa voi myöhemmin muokata. Tämä on nopeampi, turvallisempi ja jättää koodikannan koskemattomaksi.
 
-### 2. Database (Supabase)
-One migration creating all tables with `GRANT`s + permissive RLS for `anon`:
+## Vaiheet
 
-- `profile` (singleton row: bio, focus areas, public summary, learning score, streak)
-- `projects`, `agents`, `agent_runs`
-- `daily_briefings`, `experiments`, `experiment_reviews`
-- `ai_news`, `social_insights`
-- `learning_journal`, `skills`, `score_events`, `telegram_messages`
+1. **`profile`** — upsert yhden rivin: display_name, bio, focus_areas, tools, skills, strengths, development_goals, public_summary. learning_score=0, weekly_streak=0. Säilytetään olemassa olevat asetukset (n8n_webhook_url, telegram_*, daily_*) jos rivi jo on.
 
-Each table: `id uuid pk`, `created_at`, `updated_at` + an update trigger, plus the domain fields from the spec.
+2. **`skills`** — 15 riviä (Prompt engineering … SEO-automaatio) annetuilla category/proficiency/notes.
 
-### 3. Routes (TanStack Start, file-based)
-```
-/login                       public
-/_protected/                 layout (gate)
-  ├─ /                       Dashboard
-  ├─ /portfolio              My AI Portfolio
-  ├─ /projects, /projects/$id
-  ├─ /agents, /agents/$id
-  ├─ /briefings, /briefings/$id
-  ├─ /experiments, /experiments/$id
-  ├─ /news
-  ├─ /social
-  ├─ /journal
-  ├─ /analytics
-  └─ /settings
-```
-Shared shell with collapsible sidebar (shadcn `Sidebar`) + top bar showing streak/learning score.
+3. **`projects`** — 7 riviä:
+   - BoatBase.fi, LogiQly, AI Growth OS, BoatBase JARVIS, kilpailutamuuttosi.fi, Channel Clarity, Priima Flow.
+   - Huom: BoatBase.fi:lle annetussa datassa on `value_created` kahdesti — yhdistetään ne yhdeksi kentäksi (ensimmäinen kuvaus + JARVIS-agenttiluettelo perään), ettei dataa katoa.
+   - Tyhjäksi jätetyt kentät jätetään NULLiksi (esim. Priima Flow: ei demo_url/github_url/technologies; kilpailutamuuttosi.fi: ei github_url/demo_url).
 
-### 4. Design system
-- Dark-only theme. Deep slate/near-black background, neon cyan + violet accents, subtle grid/scanline backdrop.
-- `src/styles.css` tokens: `--background`, `--surface`, `--primary` (cyan), `--accent` (violet), gradient + glow tokens, `--shadow-glow`.
-- Reusable: `StatCard`, `SectionHeader`, `DataTable`, `StatusBadge`, `EmptyState`, `ScoreRing`, `GlowCard`.
-- Font: Space Grotesk (display) + Inter (body) via `<link>` in root.
+4. **`agents`** — 6 riviä (WRITER, REPORTER, HUNTER, GUARDIAN, SHIELD, HERMES 2.0). Linkitetään `project_id` BoatBase JARVIS -projektiin subquerylla `(SELECT id FROM projects WHERE name = 'BoatBase JARVIS — Multi-Agent System')`.
 
-### 5. Data layer
-- TanStack Query everywhere, `queryOptions` per table.
-- Mutations via direct Supabase client (single-user, RLS open) — no server functions needed for MVP.
-- Form handling via `react-hook-form` + Zod; modals (shadcn `Dialog`) for add/edit on each entity.
-- Realistic seed data inserted via `supabase--insert` after migration approval.
+5. **`learning_journal`** — 3 riviä päivämäärillä 2025-06-01, 2025-05-15, 2025-04-20.
 
-### 6. Page contents (summary)
-- **Dashboard**: 4 stat cards (Learning Score, Streak, Experiments done, Avg score), Today's Experiment + Today's Briefing panels, Recent lists, Agent status pills, Quick-action buttons opening create dialogs.
-- **Portfolio**: Single profile doc — bio, skills (chips), tools, focus areas, public summary preview card.
-- **Projects/Agents/Briefings/Experiments/News/Social/Journal**: Index = card or table grid + search/filter + add button; detail page with all fields, edit + delete.
-- **Analytics**: Recharts (already in template) — score-over-time line, category breakdown bars, top tools, streak heatmap-ish strip.
-- **Settings**: Profile form + placeholder cards for Telegram/n8n/API/Export.
+6. **`ai_news`** — 5 oppia (`kind='lesson'`) annetuilla content/summary/scores/tags/discovered_at.
 
-### 7. Out of scope for this build (placeholders only)
-- Real n8n/Telegram wiring (tables ready, settings page shows config placeholders).
-- AI scoring of experiments (manual entry of score + AI feedback fields).
-- Supabase Auth (swap-in later).
+## Idempotenssi
 
-### Technical notes
-- Tailwind v4 tokens in `src/styles.css` only.
-- TanStack file-based routing; every route gets `errorComponent` + `notFoundComponent`.
-- Sidebar uses `collapsible="icon"`; trigger pinned in top bar.
-- All Supabase calls via `@/integrations/supabase/client`.
-- Migration includes `GRANT SELECT, INSERT, UPDATE, DELETE ON ... TO anon, authenticated` and `service_role` ALL (MVP single-user).
+- Profiili: `INSERT … ON CONFLICT` tai update jos rivi olemassa.
+- Muut taulut: poistetaan ensin saman nimiset/päiväiset rivit ennen insertointia, ettei syöttöä ajettaessa toistuvasti synny duplikaatteja. (Käytännössä yhdellä ajolla tämä ei välttämättä toistu, mutta turvallisuussyistä.)
 
-Shipping order: migration → design tokens + shell → entity CRUD pages (projects, experiments, agents, briefings, news, social, journal) → portfolio + dashboard + analytics → settings → seed data.
+## Mitä EI tehdä
+
+- Ei luoda uusia tauluja, ei migraatioita.
+- Ei kosketa koodia (komponentit, reitit, client).
+- Ei käännetä mitään englanniksi.
+- Ei lisätä `experiments`, `daily_briefings`, `social_insights`, `agent_runs` tms. — käyttäjä ei antanut niihin sisältöä.
+
+## Vahvistus
+
+Lopuksi ajetaan `SELECT count(*)` per taulu (profile, skills, projects, agents, learning_journal, ai_news joissa kind='lesson') ja raportoidaan rivimäärät käyttäjälle.
